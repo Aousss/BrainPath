@@ -6,15 +6,14 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/blue_gradient"
     tools:context=".SignInActivity">
 
 <!--    APP LOGO DISPLAY-->
-    <ImageView
-        android:id="@+id/appLogo"
+    <ImageView android:id="@+id/appLogo"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/bp_logo_color"
+        android:src="@drawable/bp_logo_white"
         android:contentDescription="@string/app_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,12 +21,11 @@
         android:layout_marginTop="80dp"/>
 
 <!--    APP NAME-->
-    <TextView
-        android:id="@+id/appName"
+    <TextView android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="BrightPath"
-        android:textColor="@color/blue"
+        android:textColor="@color/white"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/appLogo"
@@ -60,144 +58,174 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sign in"
-                android:textSize="22sp"
+                android:textSize="32sp"
                 android:textStyle="bold"
                 android:textColor="@color/blue"
                 android:layout_gravity="center_horizontal"/>
 
-<!--            USERNAME FIELD-->
-            <EditText
-                android:id="@+id/usernameField"
+<!--            SCROLLABLE CONTENT-->
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Username"
-                android:background="@drawable/edittext_background"
-                android:inputType="text"
-                android:layout_marginTop="16dp"
-                android:padding="12dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
 
-<!--            PASSWORD FIELD-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/edittext_background">
-
-                <EditText
-                    android:id="@+id/passwordField"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    android:padding="5dp"
-                    android:layout_marginTop="-9dp"/>
-
-                <TextView
-                    android:id="@+id/showPassword"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="show"
-                    android:textStyle="bold"
-                    android:textColor="@color/blue"
-                    android:layout_gravity="center_vertical"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"/>
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <!--            USERNAME FIELD-->
+                    <EditText
+                        android:id="@+id/usernameField"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Username"
+                        android:background="@drawable/edittext_background"
+                        android:inputType="text"
+                        android:layout_marginTop="16dp"
+                        android:padding="12dp"/>
 
-<!--            FORGOT PASSWORD-->
-            <TextView
-                android:id="@+id/forgotPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Forgot Password"
-                android:textColor="@color/blue"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:layout_marginTop="8dp"
-                android:layout_gravity="end"/>
+                    <!--            PASSWORD FIELD-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/edittext_background">
 
-<!--            ROLE SELECTION-->
-            <RadioGroup
-                android:id="@+id/roleGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp">
+                        <EditText
+                            android:id="@+id/passwordField"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="Password"
+                            android:inputType="textPassword"
+                            android:padding="5dp"
+                            android:layout_marginTop="-9dp"/>
 
-                <RadioButton
-                    android:id="@+id/studentRole"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Student"/>
+                        <TextView
+                            android:id="@+id/showPassword"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:text="show"
+                            android:textStyle="bold"
+                            android:textColor="@color/blue"
+                            android:layout_gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:gravity="center_vertical"/>
 
-                <RadioButton
-                    android:id="@+id/educatorRole"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Educator"
-                    android:layout_marginStart="16dp" />
-            </RadioGroup>
+                    </LinearLayout>
 
-<!--            SIGN IN BUTTON-->
-            <Button
-                android:id="@+id/signInButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Sign in"
-                android:background="@drawable/button_background"
-                android:textColor="@color/white" />
+                    <!--            FORGOT PASSWORD-->
+                    <TextView android:id="@+id/forgotPassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:text="Forgot Password"
+                        android:textColor="@color/blue"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_gravity="start"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="or"
-                android:textColor="@color/dark_grey"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:textSize="14sp" />
+                    <!--            ROLE SELECTION-->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Select your role:"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/light_grey"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="16dp"/>
 
-<!--            GOOGLE SIGN IN BUTTON-->
-            <Button
-                android:id="@+id/googleSignInButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign in with Google"
-                android:textColor="@color/white"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/signin_google_button_background"/>
+                    <RadioGroup android:id="@+id/roleGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="3dp">
 
-<!--            REGISTER NOW-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="16dp"
-                android:gravity="center">
+                        <RadioButton
+                            android:id="@+id/studentRole"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Student"
+                            android:buttonTint="@color/radio_button_blue"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="New to apps?"
-                    android:textSize="14sp"
-                    android:textColor="@color/light_grey"
-                    android:textStyle="bold"/>
+                        <RadioButton
+                            android:id="@+id/educatorRole"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Educator"
+                            android:layout_marginStart="16dp"
+                            android:buttonTint="@color/radio_button_blue"/>
+                    </RadioGroup>
 
-                <TextView
-                    android:id="@+id/registerNow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" Join now"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/blue"
-                    android:layout_marginStart="4dp" />
-            </LinearLayout>
+                    <!--            SIGN IN BUTTON-->
+                    <Button android:id="@+id/signInButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Sign in"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:textAllCaps="false"
+                        android:background="@drawable/button_background"/>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="or"
+                        android:textColor="@color/dark_grey"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        android:textSize="14sp" />
+
+                    <!--            GOOGLE SIGN IN BUTTON-->
+                    <Button android:id="@+id/googleSignInButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sign in with Google"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/blue"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/button_background_2"/>
+
+                    <!--            REGISTER NOW-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center">
+
+                        <TextView android:id="@+id/newToApps"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:text="New to apps?"
+                            android:textSize="14sp"
+                            android:textColor="@color/light_grey"
+                            android:textStyle="bold"
+                            android:padding="5dp"/>
+
+                        <TextView android:id="@+id/registerNow"
+                            android:layout_width="75dp"
+                            android:layout_height="50dp"
+                            android:text=" Join now"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/blue"
+                            android:layout_marginStart="4dp"
+                            android:padding="5dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

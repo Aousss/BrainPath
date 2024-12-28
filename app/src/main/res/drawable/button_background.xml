@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- Main shape layer -->
-    <item>
-        <shape android:shape="rectangle">
-            <gradient
-                android:startColor="@color/blue"
-                android:endColor="@color/light_blue"
-                android:angle="0"/>
-            <corners android:radius="1000dp" />
-            <stroke android:color="@color/light_grey" android:width="2dp"/>
-
-            <padding
-                android:left="8dp"
-                android:top="8dp"
-                android:right="8dp"
-                android:bottom="8dp" />
-        </shape>
-    </item>
-</layer-list>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient android:startColor="@color/light_white"
+        android:endColor="@color/white"
+        android:type="linear"/>
+    <corners android:radius="200dp"/>
+</shape>

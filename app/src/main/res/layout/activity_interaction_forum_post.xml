@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--    CONTACT NAME HOLDER-->
+    <TextView
+        android:id="@+id/addForum"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/blue"
+        android:gravity="center"
+        android:text="New Forum"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        tools:ignore="MissingConstraints,TextContrastCheck" />
+
+    <LinearLayout
+        android:id="@+id/buttonPanel"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        tools:ignore="MissingConstraints"
+        android:layout_marginTop="2dp"
+        app:layout_constraintTop_toBottomOf="@id/addForum">
+
+        <ImageButton
+            android:id="@+id/cancelButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_close"
+            android:background="@color/blue"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="1dp"/>
+
+        <ImageButton
+            android:id="@+id/postButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_check"
+            android:background="@color/blue"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="2dp"/>
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="130dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:backgroundTint="@color/blue"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintTop_toBottomOf="@id/buttonPanel">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="5dp">
+
+            <EditText
+                android:id="@+id/forumTitle"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Title..."
+                android:inputType="text"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingStart="20dp"
+                android:background="@color/blue"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <EditText
+                android:id="@+id/forumDesc"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:hint="Description"
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:textSize="16sp"
+                android:paddingVertical="10dp"
+                android:paddingHorizontal="20dp"
+                android:background="@color/light_white"
+                app:layout_constraintTop_toBottomOf="@id/forumTitle"
+                app:layout_constraintBottom_toTopOf="@id/attachmentLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <!-- Button Layout -->
+            <LinearLayout
+                android:id="@+id/attachmentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom"
+                android:weightSum="3"
+                android:background="@color/blue"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- Attachments Button -->
+                <ImageButton
+                    android:id="@+id/attachmentButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_attach"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:padding="16dp" />
+
+                <!-- Photos Button -->
+                <ImageButton
+                    android:id="@+id/photoButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_photos"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:padding="16dp" />
+
+                <!-- Camera Button -->
+                <ImageButton
+                    android:id="@+id/cameraButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_camera"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:padding="16dp" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

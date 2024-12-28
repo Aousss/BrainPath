@@ -28,6 +28,12 @@
         <!-- SIGN IN ACTIVITY -->
         <activity android:name=".SignInActivity"/>
 
+        <!-- FORGOT PASSWORD -->
+        <activity android:name=".ForgotPassword"/>
+
+        <!-- REGISTER ACTIVITY -->
+        <activity android:name=".RegisterActivity"/>
+
         <!-- MAIN ACTIVITY -->
         <activity android:name=".MainActivity"/>
     </application>

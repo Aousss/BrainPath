@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background of the ProgressBar -->
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="8dp" />
+            <solid android:color="@color/blue" />
+            <stroke android:width="2dp" android:color="@color/white" />
+        </shape>
+    </item>
+
+    <!-- Progress (Filled Area) -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="8dp" />
+                <solid android:color="@color/white" /> <!-- Blue progress color -->
+            </shape>
+        </clip>
+    </item>
+
+</layer-list>
+

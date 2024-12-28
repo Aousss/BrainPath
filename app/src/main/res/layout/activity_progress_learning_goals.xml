@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/ProgressTrackingPanelBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/blue"
+        android:gravity="center"
+        android:text="Learning Goals"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
+    <!--  CONTENTS -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:backgroundTint="@color/light_white"
+        app:cardCornerRadius="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    android:text="Current Goals: "
+                    android:textColor="@color/blue"
+                    android:textSize="30sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/goalHours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    android:text="8H"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="30sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    android:text="/week"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="30sp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+            <!-- GRAPH INPUT DISPLAY -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="310dp"
+                android:backgroundTint="@color/blue"
+                android:layout_marginHorizontal="10dp"
+                app:cardCornerRadius="10dp">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@color/white"/>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="10dp"
+                android:gravity="center">
+
+                <!--ACHIEVED DISPLAY-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/achievedCardDisplay"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/light_grey"
+                    app:cardCornerRadius="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <!--ACHIEVED-->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:text="Total Achieved"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="@color/white"
+                            android:gravity="center"
+                            android:background="@color/blue"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="5dp"
+                            android:text="26 times"
+                            android:textStyle="bold|italic"
+                            android:textSize="18sp"
+                            android:gravity="center"
+                            android:background="@color/white"/>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!--AVERAGE DISPLAY-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/averageCardDisplay"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/light_grey"
+                    app:cardCornerRadius="10dp"
+                    android:layout_marginStart="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <!--AVERAGE-->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:text="Average"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:gravity="center"
+                            android:background="@color/blue"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="5dp"
+                            android:text="26 times"
+                            android:textStyle="bold|italic"
+                            android:textSize="18sp"
+                            android:gravity="center"
+                            android:background="@color/white"/>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <TextView android:text="Most Learned"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/blue"
+                android:layout_marginTop="20dp"/>
+
+            <!--MOST LEARNED TOPICS-->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="10dp"
+                app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp">
+
+                    <!--TOPICS #1-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                        <TextView android:text="Mathematics"
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:textSize="16sp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center_vertical">
+
+                            <ProgressBar
+                                android:id="@+id/timeProgressBarMaths"
+                                android:layout_width="match_parent"
+                                android:layout_height="7dp"
+                                android:progress="100"
+                                android:max="100"
+                                android:indeterminate="false"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:progressDrawable="@drawable/learning_goals_progress"/>
+
+                            <TextView
+                                android:id="@+id/timeBarMaths"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4h 42m"
+                                android:textSize="12sp"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!--TOPICS #2-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                        <TextView android:text="Science"
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:textSize="16sp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center_vertical">
+
+                            <ProgressBar
+                                android:id="@+id/timeProgressBarScience"
+                                android:layout_width="match_parent"
+                                android:layout_height="7dp"
+                                android:progress="70"
+                                android:max="100"
+                                android:indeterminate="false"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:progressDrawable="@drawable/learning_goals_progress"/>
+
+                            <TextView
+                                android:id="@+id/timeBarScience"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3h 55m"
+                                android:textSize="12sp"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!--TOPICS #1-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                        <TextView android:text="English"
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:textSize="16sp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center_vertical">
+
+                            <ProgressBar
+                                android:id="@+id/timeProgressBarEnglish"
+                                android:layout_width="match_parent"
+                                android:layout_height="7dp"
+                                android:progress="60"
+                                android:max="100"
+                                android:indeterminate="false"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:progressDrawable="@drawable/learning_goals_progress"/>
+
+                            <TextView
+                                android:id="@+id/timeBarEnglish"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3h 30m"
+                                android:textSize="12sp"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

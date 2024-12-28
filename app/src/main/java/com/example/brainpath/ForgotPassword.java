@@ -1,12 +1,11 @@
-package com.example.brainpath.ui;
+package com.example.brainpath;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.brainpath.R;
 
 public class ForgotPassword extends AppCompatActivity {
 
@@ -31,14 +30,28 @@ public class ForgotPassword extends AppCompatActivity {
         });
     }
 
-    //    HANDLE THE PAGE FOR FORGOT PASSWORD 1
+    //    HANDLE THE PAGE FOR FORGOT PASSWORD 3
     private void forgotPassword_2() {
         Button gotoForgotPassword_3 = findViewById(R.id.btnContinue_2);
         gotoForgotPassword_3.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                setContentView(R.id.);
+                setContentView(R.layout.forgot_password_3);
+                forgotPassword_3();
+            }
+        });
+    }
+
+    //    HANDLE THE PAGE FOR FORGOT PASSWORD 3
+    private void forgotPassword_3() {
+        Button gotoLogin = findViewById(R.id.btnSubmit);
+        gotoLogin.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ForgotPassword.this, SignInActivity.class);
+                startActivity(intent);
             }
         });
     }

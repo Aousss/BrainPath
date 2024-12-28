@@ -66,8 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Register"
-                    android:textColor="@android:color/transparent"
-                    android:foreground="@drawable/blue_gradient"
+                    android:textColor="@color/blue"
                     android:textSize="32sp"
                     android:textStyle="bold" />
 
@@ -159,7 +158,7 @@
 
                 <!--            SIGN IN BUTTON-->
                 <Button
-                    android:id="@+id/signInButton"
+                    android:id="@+id/registerBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="50dp"
@@ -206,7 +205,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/signin_google_button_background"
+                    android:background="@drawable/button_background"
                     android:text="Sign in with Google"
                     android:textColor="@color/white" />
 
@@ -227,7 +226,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/registerNow"
+                        android:id="@+id/signinNow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
