@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "878637047128",
+    "project_id": "brightpath-d4c0c",
+    "storage_bucket": "brightpath-d4c0c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878637047128:android:1566f6a1c939760f94992d",
+        "android_client_info": {
+          "package_name": "com.example.brainpath"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBO2HGGKA0hXwESDN8A3xbJg0VxDGHPW-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,10 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services") // Add the Google services plugin
 }
 
 android {
     namespace = "com.example.brainpath"
     compileSdk = 34
+
+    buildFeatures {
+        viewBinding = true
+    }
 
     defaultConfig {
         applicationId = "com.example.brainpath"
@@ -36,7 +41,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -49,4 +53,21 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
+    // Add Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+
+    // Add Firebase Analytics
+    implementation("com.google.firebase:firebase-analytics")
+
+    // Auth
+    implementation("com.google.firebase:firebase-auth") // Add Firebase Authentication
+
+    //Auth via google
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
+
+    //add firebasedatabase
+    implementation("com.google.firebase:firebase-database")
+
+
+    // Add other Firebase dependencies as needed
 }

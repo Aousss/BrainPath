@@ -79,7 +79,7 @@
                         android:id="@+id/usernameField"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="Username"
+                        android:hint="Email"
                         android:background="@drawable/edittext_background"
                         android:inputType="text"
                         android:layout_marginTop="16dp"

@@ -8,59 +8,95 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+
 public class SignInActivity extends AppCompatActivity {
 
-    private  boolean isPasswordVisible = false;
+    private boolean isPasswordVisible = false;
+    private FirebaseAuth mAuth; // Firebase Authentication instance
+    private GoogleSignInClient googleSignInClient; // Google Sign-In client
+    private static final int RC_SIGN_IN = 100; // Request code for Google Sign-In
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        Button loginBtn = findViewById(R.id.signInButton);
-        Button signupBtn = findViewById(R.id.googleSignInButton);
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
 
+        // Configure Google Sign-In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("878637047128-dgtagtba3s9i0n9kbr5eevlipbmmevjl.apps.googleusercontent.com") // Web Client ID
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // Initialize UI elements
+        Button loginBtn = findViewById(R.id.signInButton);
+        Button googleSignInBtn = findViewById(R.id.googleSignInButton);
+        EditText emailField = findViewById(R.id.usernameField);
         EditText passwordField = findViewById(R.id.passwordField);
         TextView showPassword = findViewById(R.id.showPassword);
+        TextView registerNow = findViewById(R.id.registerNow); // "Join Now" TextView
+        TextView forgotPassword = findViewById(R.id.forgotPassword);
 
+        // Login Button Logic
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                startActivity(intent);
+                String email = emailField.getText().toString().trim();
+                String password = passwordField.getText().toString().trim();
+
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(SignInActivity.this, "Please enter email and password", Toast.LENGTH_SHORT).show();
+                } else {
+                    loginUser(email, password);
+                }
             }
         });
 
-        //        SHOW or HIDE PASSWORD
+        // Google Sign-In Button Logic
+        googleSignInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signInWithGoogle();
+            }
+        });
+
+        // Toggle Password Visibility
         showPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isPasswordVisible) {
-                    // Password is hidden
-                    passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+                    passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     passwordField.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     showPassword.setText("Show");
                 } else {
-                    // Password is show
                     passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     passwordField.setTransformationMethod(null);
                     showPassword.setText("Hide");
                 }
-
-                // Move cursor to the end after toggling
                 passwordField.setSelection(passwordField.length());
-
-                // Toggle the state
                 isPasswordVisible = !isPasswordVisible;
             }
         });
 
-        //        FORGOT PASSWORD
-        TextView forgotPassword = findViewById(R.id.forgotPassword);
+        // Forgot Password Logic
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,16 +105,70 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-        //        REGISTER NEW ACCOUNT
-        signupBtn.setOnClickListener(new View.OnClickListener() {
+        // Navigate to RegisterActivity when "Join Now" is clicked
+        registerNow.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View y) {
+            public void onClick(View v) {
                 Intent intent = new Intent(SignInActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
 
-        //        SET THE GRADIENT BUTTON
+        // Set Gradient for Login Button
         loginBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.blue_gradient));
+    }
+
+    // Handle Firebase Email and Password Login
+    private void loginUser(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(SignInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(SignInActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // Google Sign-In Logic
+    private void signInWithGoogle() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult();
+                if (account != null) {
+                    firebaseAuthWithGoogle(account);
+                }
+            } catch (Exception e) {
+                Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        Toast.makeText(this, "Sign-In successful: " + (user != null ? user.getEmail() : ""), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
