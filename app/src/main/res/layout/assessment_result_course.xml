@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView android:id="@+id/courseTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mathematics"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/dark_grey"/>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:stretchColumns="0,1,2">
+
+        <!-- Row 1 - Title -->
+        <TableRow
+            android:id="@+id/tableHeader"
+            android:background="@drawable/table_background">
+
+            <TextView
+                android:text="Assessment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="Marks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="Status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+        </TableRow>
+
+        <!-- Row 2 - Contents 1 -->
+        <TableRow
+            android:id="@+id/assessment_1"
+            android:background="@drawable/table_background_contents">
+
+            <TextView
+                android:text="Statistics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="90/100"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="Excellent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+        </TableRow>
+
+        <!-- Row 2 - Contents 2 -->
+        <TableRow
+            android:id="@+id/assessment_2"
+            android:background="@drawable/table_background_contents">
+
+            <TextView
+                android:text="Probability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="75/100"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="Passed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+        </TableRow>
+
+        <!-- Row 2 - Contents 3 -->
+        <TableRow
+            android:id="@+id/assessment_3"
+            android:background="@drawable/table_background_contents">
+
+            <TextView
+                android:text="Algebra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="92/100"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="Passed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

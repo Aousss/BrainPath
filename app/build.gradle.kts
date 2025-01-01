@@ -70,4 +70,8 @@ dependencies {
 
 
     // Add other Firebase dependencies as needed
+
+    // Add Glide Library - use for the efficiently loading and caching images, especially from the network or other sources such as Firebase Storage
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 }

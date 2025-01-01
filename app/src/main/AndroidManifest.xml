@@ -26,13 +26,13 @@
         </activity>
 
         <!-- SIGN IN ACTIVITY -->
-        <activity android:name=".SignInActivity"/>
+        <activity android:name=".ui.profile.SignInActivity"/>
 
         <!-- FORGOT PASSWORD -->
-        <activity android:name=".ForgotPassword"/>
+        <activity android:name=".ui.profile.ForgotPassword"/>
 
         <!-- REGISTER ACTIVITY -->
-        <activity android:name=".RegisterActivity"/>
+        <activity android:name=".ui.profile.RegisterActivity"/>
 
         <!-- MAIN ACTIVITY -->
         <activity android:name=".MainActivity"/>
