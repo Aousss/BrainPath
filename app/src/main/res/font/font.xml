@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <font
-        android:fontStyle="normal"
-        android:fontWeight="7000"
-        android:font="@font/inter_variable_font"/>
-
+        android:fontStyle="italic"
+        android:fontWeight="700"
+        android:font="@font/inter_italic"/>
 </font-family>

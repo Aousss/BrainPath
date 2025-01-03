@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:stretchColumns="0,1">
+
+        <!-- Row 1 - Title -->
+        <TableRow
+            android:id="@+id/tableHeader"
+            android:background="@drawable/table_background">
+
+            <TextView
+                android:text="Subject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="Assessment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+        </TableRow>
+
+        <!-- Row 2 - Contents 1 -->
+        <TableRow
+            android:id="@+id/subject_1"
+            android:background="@drawable/table_background_contents">
+
+            <TextView
+                android:text="Mathematics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="Algebra Basics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+        </TableRow>
+
+        <!-- Row 2 - Contents 2 -->
+        <TableRow
+            android:id="@+id/subject_2"
+            android:background="@drawable/table_background_contents">
+
+            <TextView
+                android:text="Science"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="Physics Basics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+        </TableRow>
+
+        <!-- Row 2 - Contents 3 -->
+        <TableRow
+            android:id="@+id/subject_3"
+            android:background="@drawable/table_background_contents">
+
+            <TextView
+                android:text="English"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:text="Grammar Test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

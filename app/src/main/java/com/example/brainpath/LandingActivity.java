@@ -6,6 +6,8 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.brainpath.ui.profile.SignInActivity;
+
 public class LandingActivity extends AppCompatActivity {
 
     @Override

@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- App-wide permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -25,17 +29,30 @@
             </intent-filter>
         </activity>
 
-        <!-- SIGN IN ACTIVITY -->
-        <activity android:name=".SignInActivity"/>
-
-        <!-- FORGOT PASSWORD -->
-        <activity android:name=".ForgotPassword"/>
-
-        <!-- REGISTER ACTIVITY -->
-        <activity android:name=".RegisterActivity"/>
-
         <!-- MAIN ACTIVITY -->
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" android:exported="true" />
+
+        <!-- PROFILE MODULE -->
+        <activity android:name=".ui.profile.SignInActivity" android:exported="true" />
+        <activity android:name=".ui.profile.ForgotPassword" android:exported="true" />
+        <activity android:name=".ui.profile.RegisterActivity" android:exported="true" />
+
+        <!-- INTERACTION MODULE -->
+        <activity android:name=".ui.interaction.ChatActivity" android:exported="true" />
+        <activity android:name=".ui.interaction.FriendListActivity" android:exported="true" />
+        <activity android:name=".ui.interaction.InteractionAddActivity" android:exported="true" />
+
+        <!-- RESOURCES MODULE -->
+        <activity android:name=".ui.resources.ResourceActivity" android:exported="true" />
+
+        <!-- FIREBASE CONFIGURATION -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+        <meta-data
+            android:name="com.google.firebase.analytics.FirebaseAnalytics.Event"
+            android:value="true" />
+
     </application>
 
 </manifest>

@@ -7,9 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/blue_gradient"
-    tools:context=".SignInActivity">
+    tools:context=".ui.profile.SignInActivity">
 
-<!--    APP LOGO DISPLAY-->
+    <!--    APP LOGO DISPLAY-->
     <ImageView android:id="@+id/appLogo"
         android:layout_width="80dp"
         android:layout_height="80dp"
@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="80dp"/>
 
-<!--    APP NAME-->
+    <!--    APP NAME-->
     <TextView android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="6dp"/>
 
-<!--    SIGN IN CARD-->
+    <!--    SIGN IN CARD-->
     <androidx.cardview.widget.CardView
         android:id="@+id/signInCard"
         android:layout_width="0dp"
@@ -53,7 +53,7 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-<!--            SIGN IN TITLE-->
+            <!--            SIGN IN TITLE-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                 android:textColor="@color/blue"
                 android:layout_gravity="center_horizontal"/>
 
-<!--            SCROLLABLE CONTENT-->
+            <!--            SCROLLABLE CONTENT-->
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                         android:id="@+id/usernameField"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="Username"
+                        android:hint="Email"
                         android:background="@drawable/edittext_background"
                         android:inputType="text"
                         android:layout_marginTop="16dp"

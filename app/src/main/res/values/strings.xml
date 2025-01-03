@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">BrainPath</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_assessment">Assessment</string>
+    <string name="title_interaction">Interaction</string>
+    <string name="title_resources">Resources</string>
+    <string name="title_profile">Profile</string>
+    <string name="default_notification_channel_id">default_channel</string>
+
 </resources>
