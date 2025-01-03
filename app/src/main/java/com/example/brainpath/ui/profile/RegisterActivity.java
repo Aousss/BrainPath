@@ -41,11 +41,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up); // Ensure this matches your XML layout file name
 
-        // Hide the Action Bar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
-
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
 
