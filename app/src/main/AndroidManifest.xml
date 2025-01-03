@@ -26,16 +26,29 @@
         </activity>
 
         <!-- SIGN IN ACTIVITY -->
-        <activity android:name=".SignInActivity"/>
+        <activity android:name=".ui.profile.SignInActivity" android:exported="true" />
 
         <!-- FORGOT PASSWORD -->
-        <activity android:name=".ForgotPassword"/>
+        <activity android:name=".ui.profile.ForgotPassword" android:exported="true" />
 
         <!-- REGISTER ACTIVITY -->
-        <activity android:name=".RegisterActivity"/>
+        <activity android:name=".ui.profile.RegisterActivity" android:exported="true" />
 
         <!-- MAIN ACTIVITY -->
-        <activity android:name=".MainActivity"/>
-    </application>
+        <activity android:name=".MainActivity" android:exported="true" />
 
+        <!-- FRIEND LIST ACTIVITY -->
+        <activity android:name=".ui.interaction.FriendListActivity" android:exported="true" />
+
+        <!-- CHAT ACTIVITY -->
+        <activity android:name=".ui.interaction.ChatActivity" android:exported="true" />
+
+        <!-- INTERACTION ADD ACTIVITY -->
+        <activity android:name=".ui.interaction.InteractionAddActivity" android:exported="true" />
+
+<!--        &lt;!&ndash; FORUM ACTIVITIES &ndash;&gt;-->
+<!--        <activity android:name=".ui.interaction.ForumActivity" android:exported="true" />-->
+<!--        <activity android:name=".ui.interaction.ForumPostActivity" android:exported="true" />-->
+
+    </application>
 </manifest>

@@ -37,7 +37,6 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    buildToolsVersion = "30.0.3"
 }
 
 dependencies {
@@ -68,6 +67,13 @@ dependencies {
     //add firebasedatabase
     implementation("com.google.firebase:firebase-database")
 
+// Firestore SDK for Kotlin
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     // Add other Firebase dependencies as needed
+
+    // Add Glide Library - use for the efficiently loading and caching images, especially from the network or other sources such as Firebase Storage
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 }
+
