@@ -24,7 +24,7 @@
 
         <!-- LANDING PAGE -->
         <activity
-            android:name=".LandingActivity"
+            android:name=".ProgressAndTrackingHome"
             android:exported="true"
             android:label="@string/app_name"
             tools:ignore="Instantiatable">
