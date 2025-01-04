@@ -2,6 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -46,9 +55,9 @@
         <!-- INTERACTION ADD ACTIVITY -->
         <activity android:name=".ui.interaction.InteractionAddActivity" android:exported="true" />
 
-<!--        &lt;!&ndash; FORUM ACTIVITIES &ndash;&gt;-->
-<!--        <activity android:name=".ui.interaction.ForumActivity" android:exported="true" />-->
-<!--        <activity android:name=".ui.interaction.ForumPostActivity" android:exported="true" />-->
+        <!-- FORUM ACTIVITIES -->
+        <activity android:name=".ui.interaction.ForumActivity" android:exported="true" />
+        <activity android:name=".ui.interaction.ForumPostActivity" android:exported="true" />
 
     </application>
 </manifest>
