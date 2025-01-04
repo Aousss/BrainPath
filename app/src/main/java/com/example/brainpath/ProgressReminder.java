@@ -12,7 +12,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
-import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,8 @@ public class ProgressReminder extends AppCompatActivity {
     private NotificationManager notificationManager;
     private LinearLayout reminderListContainer;
 
+    private FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +34,9 @@ public class ProgressReminder extends AppCompatActivity {
         notificationSwitch = findViewById(R.id.notificationOn);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         reminderListContainer = findViewById(R.id.reminderListContainer);
+
+        // Initialize Firestore instance
+        db = FirebaseFirestore.getInstance();
         // Handle switch state change
         notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -62,15 +69,39 @@ public class ProgressReminder extends AppCompatActivity {
         Toast.makeText(this, "Notifications Disabled", Toast.LENGTH_SHORT).show();
     }
 
-    // This method loads dummy upcoming events (and inflates them into the layout)
+    // This method loads the upcoming events from Firestore
     private void loadUpcomingEvents() {
-        // Dummy data for upcoming events with dates
-        ArrayList<Event> events = new ArrayList<>();
-        events.add(new Event("Meeting with Math Instructor", "20 Jan 2025"));
-        events.add(new Event("Study Group for Physics", "25 Jan 2025"));
-        events.add(new Event("Chemistry Lab Session", "30 Jan 2025"));
+        // Fetch reminders from Firestore (you can modify the path to suit your structure)
+        db.collection("reminder")  // Your course collection
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (querySnapshot != null) {
+                            // List to hold all events
+                            List<Event> events = new ArrayList<>();
 
-        // Loop through the list and inflate them into the layout
+                            // Loop through the Firestore results and create event objects
+                            querySnapshot.forEach(document -> {
+                                String title = document.getString("title");
+                                String date = document.getString("date");
+
+                                // Add event to the list
+                                events.add(new Event(title, date));
+                            });
+
+                            // Inflate the events into the layout
+                            inflateEvents(events);
+                        }
+                    } else {
+                        // Handle failure
+                        Toast.makeText(this, "Error loading reminders", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    // Method to dynamically create views for the events
+    private void inflateEvents(List<Event> events) {
+        // Inflate event cards for each event
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         for (Event event : events) {
