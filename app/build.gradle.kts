@@ -62,7 +62,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth") // Add Firebase Authentication
 
     //Auth via google
-    implementation("com.google.android.gms:play-services-auth:20.6.0")
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
 
     //add firebasedatabase
     implementation("com.google.firebase:firebase-database")
@@ -70,9 +70,9 @@ dependencies {
 // Firestore SDK for Kotlin
     implementation("com.google.firebase:firebase-firestore-ktx")
 
-    implementation ("com.google.firebase:firebase-storage:21.0.0") // Add this line for Firebase Storage
-    implementation ("com.google.firebase:firebase-auth:21.0.0")   // Firebase Auth dependency (if needed)
-    implementation ("com.google.firebase:firebase-firestore:24.0.0") // Firestore dependency (if needed)
+    implementation ("com.google.firebase:firebase-storage:21.0.1") // Add this line for Firebase Storage
+    implementation ("com.google.firebase:firebase-auth:23.1.0")   // Firebase Auth dependency (if needed)
+    implementation ("com.google.firebase:firebase-firestore:25.0.0") // Firestore dependency (if needed)
 
     // Add other Firebase dependencies as needed
 
