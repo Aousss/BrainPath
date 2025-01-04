@@ -1,6 +1,7 @@
 package com.example.brainpath.ui.profile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
@@ -16,6 +17,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.brainpath.MainActivity;
 import com.example.brainpath.R;
+import com.example.brainpath.ui.interaction.FriendListActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,11 +27,14 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignInActivity extends AppCompatActivity {
 
     private boolean isPasswordVisible = false;
     private FirebaseAuth mAuth; // Firebase Authentication instance
+    private FirebaseFirestore db; // Firestore instance
     private GoogleSignInClient googleSignInClient; // Google Sign-In client
     private static final int RC_SIGN_IN = 100; // Request code for Google Sign-In
 
@@ -40,6 +45,9 @@ public class SignInActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+
+        // Initialize Firestore
+        db = FirebaseFirestore.getInstance(); // Initialize Firestore
 
         // Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -125,20 +133,60 @@ public class SignInActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(SignInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            // Store session data if needed
+                            SharedPreferences sharedPref = getSharedPreferences("UserSession", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("userEmail", user.getEmail());
+                            editor.putString("userUid", user.getUid());
+                            editor.apply();
+
+                            // Show success and navigate to FriendListActivity
+                            Toast.makeText(SignInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(SignInActivity.this,  MainActivity.class); // Navigate to FriendListActivity
+                            startActivity(intent);
+                            finish();
+                        }
                     } else {
-                        Toast.makeText(SignInActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        String errorMessage = task.getException() != null ? task.getException().getMessage() : "Login failed";
+                        Toast.makeText(SignInActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
 
     // Google Sign-In Logic
     private void signInWithGoogle() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void getUserUsername() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            db.collection("users").document(userId)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null && document.exists()) {
+                                String username = document.getString("username");  // Fetch the username field
+                                if (username != null) {
+                                    // Use the username (e.g., display it on the UI)
+                                    Toast.makeText(SignInActivity.this, "Username: " + username, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(SignInActivity.this, "Username not found", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(SignInActivity.this, "No document found", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(SignInActivity.this, "Error fetching username: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     @Override
