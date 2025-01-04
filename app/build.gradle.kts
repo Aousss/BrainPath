@@ -65,6 +65,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth") // Firebase Authentication
     implementation("com.google.firebase:firebase-database") // Firebase Realtime Database
     implementation("com.google.firebase:firebase-firestore") // Firebase Firestore
+    implementation("com.google.firebase:firebase-functions:20.1.1") // Firebase Functions
 
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:20.6.0")
