@@ -128,29 +128,30 @@ public class RegisterActivity extends AppCompatActivity {
                         // Registration successful
                         FirebaseUser user = mAuth.getCurrentUser();
 
-                        // Create the user data to store in Firestore
-                        Map<String, Object> userData = new HashMap<>();
-                        userData.put("username", username);  // Store username
-                        userData.put("email", email);        // Store email
-                        userData.put("password", password);  // Store password (for demo purposes)
-                        userData.put("friendIds", new ArrayList<>());  // Initialize friendIds as an empty array
+                        if (user != null) {
+                            // Create the user data to store in Firestore
+                            Map<String, Object> userData = new HashMap<>();
+                            userData.put("username", username);  // Store username
+                            userData.put("email", email);        // Store email
+                            userData.put("friendIds", new ArrayList<>());  // Initialize friendIds as an empty array
 
-                        // Store user data in Firestore under "users" collection
-                        db.collection("users").document(user.getUid())
-                                .set(userData)
-                                .addOnSuccessListener(aVoid -> {
-                                    // Registration in Firestore successful
-                                    Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                            // Store user data in Firestore under "users" collection
+                            db.collection("users").document(user.getUid())
+                                    .set(userData)
+                                    .addOnSuccessListener(aVoid -> {
+                                        // Registration in Firestore successful
+                                        Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
 
-                                    // Redirect to SignInActivity
-                                    Intent intent = new Intent(RegisterActivity.this, SignInActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                })
-                                .addOnFailureListener(e -> {
-                                    // Handle error
-                                    Toast.makeText(RegisterActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                });
+                                        // Redirect to SignInActivity
+                                        Intent intent = new Intent(RegisterActivity.this, SignInActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        // Handle error
+                                        Toast.makeText(RegisterActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    });
+                        }
                     } else {
                         // Registration failed
                         Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
