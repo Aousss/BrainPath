@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:allowBackup="true"
@@ -12,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BrainPath"
         tools:targetApi="31">
+
 
         <!-- LANDING PAGE -->
         <activity
@@ -36,6 +38,19 @@
 
         <!-- MAIN ACTIVITY -->
         <activity android:name=".MainActivity"/>
+
+        <!-- MAIN LEARNING GOALS -->
+        <activity android:name=".LearningGoals"/>
+
+        <!-- MAIN PROGRESS REMINDER -->
+        <activity android:name=".ProgressReminder"/>
+
+        <!-- MAIN PROGRESS COURSES LISTS -->
+        <activity android:name=".ProgressCoursesLists"/>
+
+        <!-- MAIN PROGRESS COURSES -->
+        <activity android:name=".ProgressCourses"/>
+
     </application>
 
 </manifest>
