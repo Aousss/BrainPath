@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/blue_gradient"
-    tools:context=".SignInActivity">
+    tools:context=".ui.profile.SignInActivity">
 
 <!--    APP LOGO DISPLAY-->
     <ImageView android:id="@+id/appLogo"

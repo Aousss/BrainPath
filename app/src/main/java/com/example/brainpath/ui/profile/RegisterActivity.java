@@ -1,10 +1,9 @@
-package com.example.brainpath;
+package com.example.brainpath.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.brainpath.MainActivity;
+import com.example.brainpath.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -22,6 +23,11 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -30,6 +36,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     // Firebase Authentication instance
     private FirebaseAuth mAuth;
+
+    // Firestore instance
+    private FirebaseFirestore db;
 
     // Google Sign-In client
     private GoogleSignInClient googleSignInClient;
@@ -40,8 +49,9 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up); // Ensure this matches your XML layout file name
 
-        // Initialize Firebase Authentication
+        // Initialize Firebase Authentication and Firestore
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         // Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -51,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
         // UI Components
+        EditText usernameField = findViewById(R.id.usernameField); // Assuming you added this field in XML
         EditText emailField = findViewById(R.id.emailField);
         EditText passwordField = findViewById(R.id.passwordField);
         EditText confirmPasswordField = findViewById(R.id.conformPasswordField);
@@ -66,18 +77,19 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Handle Register Button Click
         registerButton.setOnClickListener(v -> {
+            String username = usernameField.getText().toString().trim();
             String email = emailField.getText().toString().trim();
             String password = passwordField.getText().toString().trim();
             String confirmPassword = confirmPasswordField.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                 Toast.makeText(RegisterActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else if (!password.equals(confirmPassword)) {
                 Toast.makeText(RegisterActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             } else if (password.length() < 6) {
                 Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
             } else {
-                registerUser(email, password);
+                registerUser(username, email, password);
             }
         });
 
@@ -109,17 +121,36 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // Method to register the user with Firebase Authentication
-    private void registerUser(String email, String password) {
+    private void registerUser(String username, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Registration successful
-                        Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                        FirebaseUser user = mAuth.getCurrentUser();
 
-                        // Redirect to SignInActivity
-                        Intent intent = new Intent(RegisterActivity.this, SignInActivity.class);
-                        startActivity(intent);
-                        finish();
+                        // Create the user data to store in Firestore
+                        Map<String, Object> userData = new HashMap<>();
+                        userData.put("username", username);  // Store username
+                        userData.put("email", email);        // Store email
+                        userData.put("password", password);  // Store password (for demo purposes)
+                        userData.put("friendIds", new ArrayList<>());  // Initialize friendIds as an empty array
+
+                        // Store user data in Firestore under "users" collection
+                        db.collection("users").document(user.getUid())
+                                .set(userData)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Registration in Firestore successful
+                                    Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+
+                                    // Redirect to SignInActivity
+                                    Intent intent = new Intent(RegisterActivity.this, SignInActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle error
+                                    Toast.makeText(RegisterActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
                     } else {
                         // Registration failed
                         Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
