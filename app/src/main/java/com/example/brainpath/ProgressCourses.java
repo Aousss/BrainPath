@@ -2,28 +2,42 @@ package com.example.brainpath;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class ProgressCourses extends AppCompatActivity {
     private TextView courseTitle;
     private TextView courseProgressText;
     private ProgressBar courseProgressBar;
+
+    // Quiz performance views
     private ProgressBar quizProgressBar;
     private TextView percentageCorrectText;
     private TextView percentageWrongText;
-    private TextView improvement1Text;
-    private ProgressBar improvementProgress1;
-    private TextView improvement1Percentage;
-    // Add other improvements as needed
+
+    // Improvement topics container
+    private LinearLayout improvementTopicsContainer;
+
+    // Firebase instance
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_progress_courses); // Ensure this matches your XML layout file
+        setContentView(R.layout.activity_progress_courses); // Make sure this matches your XML layout
+
+        // Initialize Firebase Firestore
+        db = FirebaseFirestore.getInstance();
 
         // Initialize views
         courseTitle = findViewById(R.id.courseTitle);
@@ -35,34 +49,103 @@ public class ProgressCourses extends AppCompatActivity {
         percentageCorrectText = findViewById(R.id.percentageCorrectText);
         percentageWrongText = findViewById(R.id.percentageWrongText);
 
-        // Improvement progress bars
-        improvement1Text = findViewById(R.id.progressPercentageImprovement1);
-        improvementProgress1 = findViewById(R.id.progressBarImprovement1);
-        improvement1Percentage = findViewById(R.id.progressPercentageImprovement1);
+        // Improvement topics container
+        improvementTopicsContainer = findViewById(R.id.improvementTopicsContainer);
 
-        // Retrieve the passed data from the Intent
+        // Retrieve data passed from the previous activity
         Intent intent = getIntent();
-        String name = intent.getStringExtra("courseName");
-        int progress = intent.getIntExtra("courseProgress", 0); // Default to 0 if not passed
+        String courseName = intent.getStringExtra("courseName");
+        int courseProgress = intent.getIntExtra("courseProgress", 0);
 
-        // Set course name and progress
-        courseTitle.setText(name);
-        courseProgressText.setText(progress + "%");
-        courseProgressBar.setProgress(progress);
+        // Set course title and progress
+        courseTitle.setText(courseName);
+        courseProgressText.setText(courseProgress + "%");
+        courseProgressBar.setProgress(courseProgress);
 
-        // Dummy data for quiz performance
-        int correctProgress = 65; // Dummy value
-        int wrongProgress = 35; // Dummy value
-        quizProgressBar.setProgress(correctProgress);
-        percentageCorrectText.setText(correctProgress + "%");
-        percentageWrongText.setText(wrongProgress + "%");
+        fetchQuizPerformance();
+        // Fetch improvement topics data from Firestore
+        fetchImprovementTopics();
+    }
 
-        // Dummy data for improvement topics
-        // Example of the first improvement topic
-        improvement1Text.setText("1. Differentiation");
-        improvementProgress1.setProgress(10); // Dummy value
-        improvement1Percentage.setText("10%");
+    private void fetchQuizPerformance() {
+        // Navigate to the subject document in the specific course
+        db.collection("course")
+                .document("subject")  // Fetch the subject document (subject is a document, not a collection)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null && document.exists()) {
+                            // Fetch the correct and wrong fields directly from the subject document
+                            Long correct = document.getLong("quiz_correct");
+                            Long wrong = document.getLong("quiz_wrong");
 
-        // You can repeat this for other improvement topics with dummy data
+                            if (correct != null && wrong != null) {
+                                // Calculate percentages
+                                int total = correct.intValue() + wrong.intValue();
+                                int correctPercentage = (total > 0) ? (correct.intValue() * 100) / total : 0;
+                                int wrongPercentage = 100 - correctPercentage;
+
+                                // Update the quiz performance UI
+                                quizProgressBar.setProgress(correctPercentage);
+                                percentageCorrectText.setText(correctPercentage + "%");
+                                percentageWrongText.setText(wrongPercentage + "%");
+                            }
+                        } else {
+                            // Handle case when subject document does not exist or is missing data
+                            Toast.makeText(this, "Subject data not found", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        // Handle failure
+                        Toast.makeText(this, "Error getting quiz performance data", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void fetchImprovementTopics() {
+        // Fetch the improvement_topic subcollection under a specific subject document in a specific course
+        db.collection("course")  // Navigate to the 'course' collection
+                .document("subject")  // Fetch the document with the subjectId
+                .collection("improvement_topic")  // Navigate to the 'improvement_topic' subcollection under the subject
+                .get()  // Fetch all improvement topics for that subject
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (querySnapshot != null) {
+                            // Iterate through the results to get the topics
+                            for (DocumentSnapshot document : querySnapshot) {
+                                String topicName = document.getString("name");
+                                int progress = document.getLong("progress").intValue();
+
+                                // Create a new view for each improvement topic
+                                createImprovementTopicView(topicName, progress);
+                            }
+                        }
+                    } else {
+                        // Handle failure
+                        Toast.makeText(this, "Error getting improvement topics", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
+
+    private void createImprovementTopicView(String topicName, int progress) {
+        // Inflate the custom improvement topic layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View improvementTopicView = inflater.inflate(R.layout.item_improvement_topic, null);
+
+        // Initialize views for the current improvement topic
+        TextView topicText = improvementTopicView.findViewById(R.id.topicText);
+        ProgressBar topicProgressBar = improvementTopicView.findViewById(R.id.topicProgressBar);
+        TextView topicProgressPercentage = improvementTopicView.findViewById(R.id.topicProgressPercentage);
+
+        // Set the data for the current topic
+        topicText.setText(topicName);
+        topicProgressBar.setProgress(progress);
+        topicProgressPercentage.setText(progress + "%");
+
+        // Add the new view to the container
+        improvementTopicsContainer.addView(improvementTopicView);
     }
 }

@@ -2,6 +2,7 @@ package com.example.brainpath;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -11,26 +12,62 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProgressCoursesLists extends AppCompatActivity {
+    // Firestore instance
+    private FirebaseFirestore db;
+    private LinearLayout courseContainer;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress_courses_lists);
+
+//        // Dummy data: List of courses with progress
+//        ArrayList<HashMap<String, Object>> registeredCourses = new ArrayList<>();
+//        registeredCourses.add(createCourse("Mathematics", 65));
+//        registeredCourses.add(createCourse("Science", 45));
+//        registeredCourses.add(createCourse("English", 35));
+//
+//        // Dynamically add cards for registered courses
+//        for (HashMap<String, Object> course : registeredCourses) {
+//            addCourseCard(courseContainer, course);
+//        }
+
         // Parent layout where cards will be added
-        LinearLayout courseContainer = findViewById(R.id.courseContainer);
+        courseContainer = findViewById(R.id.courseContainer);
 
-        // Dummy data: List of courses with progress
-        ArrayList<HashMap<String, Object>> registeredCourses = new ArrayList<>();
-        registeredCourses.add(createCourse("Mathematics", 65));
-        registeredCourses.add(createCourse("Science", 45));
-        registeredCourses.add(createCourse("English", 35));
+        // Initialize Firestore
+        db = FirebaseFirestore.getInstance();
 
-        // Dynamically add cards for registered courses
-        for (HashMap<String, Object> course : registeredCourses) {
-            addCourseCard(courseContainer, course);
-        }
+        // Fetch courses from Firebase
+        fetchCoursesFromFirebase();
+    }
+
+    private void fetchCoursesFromFirebase() {
+        db.collection("course") // Replace "courses" with your actual collection name in Firestore
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String title = document.getString("name");
+                            int progress = document.getLong("completion").intValue();
+
+                            // Create course data
+                            HashMap<String, Object> course = createCourse(title, progress);
+
+                            // Dynamically add course card
+                            addCourseCard(courseContainer, course);
+                        }
+                    } else {
+                        // Log error
+                        Log.e("FirestoreError", "Error fetching courses", task.getException());
+                    }
+                });
     }
 
     private HashMap<String, Object> createCourse(String title, int progress) {
