@@ -88,18 +88,34 @@
                 android:id="@+id/forumDesc"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:background="@color/light_white"
+                android:gravity="top"
                 android:hint="Description"
                 android:inputType="textMultiLine"
-                android:gravity="top"
-                android:textSize="16sp"
-                android:paddingVertical="10dp"
                 android:paddingHorizontal="20dp"
-                android:background="@color/light_white"
+                android:paddingVertical="10dp"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@id/attachmentPreview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/forumTitle"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/attachmentPreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No attachment selected"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:padding="10dp"
+                android:background="@color/light_white"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/forumDesc"
                 app:layout_constraintBottom_toTopOf="@id/attachmentLayout"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <!-- Button Layout -->
             <LinearLayout
