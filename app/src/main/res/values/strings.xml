@@ -3,4 +3,11 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="uploading_image_progress">Uploading image... %1$d%%</string>
+    <string name="uploading_file_progress">Uploading file... %1$d%%</string>
+    <string name="image_uploaded_successfully">Image uploaded successfully!</string>
+    <string name="file_uploaded_successfully">File uploaded successfully!</string>
+    <string name="upload_failed">Upload failed. Please try again.</string>
+    <string name="selected_image">Selected image: %1$s</string>
+    <string name="selected_file">Selected file: %1$s</string>
 </resources>
