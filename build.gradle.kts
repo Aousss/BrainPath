@@ -10,3 +10,9 @@ tasks.register("signingReport") {
         println("Use the command line or Android Studio's signing report.")
     }
 }
+
+buildscript {
+    dependencies {
+        classpath ("com.google.gms:google-services:4.3.15")
+    }
+}

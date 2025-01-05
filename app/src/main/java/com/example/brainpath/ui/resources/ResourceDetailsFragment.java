@@ -1,5 +1,6 @@
 package com.example.brainpath.ui.resources;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -17,6 +18,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.widget.Button;
+import android.widget.Toast;
+
 import com.example.brainpath.R;
 
 
@@ -24,7 +28,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class ResourceDetailsActivity extends Fragment {
+public class ResourceDetailsFragment extends Fragment {
 
     private String title, desc, previewUrl;
 

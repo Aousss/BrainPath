@@ -67,9 +67,9 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore") // Firebase Firestore
 
     // Google Sign-In
-    implementation("com.google.android.gms:play-services-auth:20.6.0")
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
 
-    // Glide Library for efficient image loading and caching
-    implementation("com.github.bumptech.glide:glide:4.15.1")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+    // Google Play Services Base
+    implementation ("com.google.android.gms:play-services-base:18.2.0")
 }
+

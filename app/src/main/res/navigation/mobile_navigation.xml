@@ -11,17 +11,18 @@
         android:label="@string/title_assessment"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
+    <activity
         android:id="@+id/navigation_interaction"
-        android:name="com.example.brainpath.ui.interaction.InteractionFragment"
+        android:name="com.example.brainpath.ui.interaction.FriendListActivity"
         android:label="@string/title_interaction"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_resources"
-        android:name="com.example.brainpath.ui.resource.ResourceFragment"
+        android:name="com.example.brainpath.ui.resources.ResourcesFragment"
         android:label="@string/title_resources"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/activity_resources"/>
+
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.brainpath.ui.profile.ProfileFragment"

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "878637047128",
+    "firebase_url": "https://brightpath-d4c0c-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "brightpath-d4c0c",
     "storage_bucket": "brightpath-d4c0c.firebasestorage.app"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "878637047128-9cv25339egpgtvvurd5rbee4tcffohji.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.brainpath",
+            "certificate_hash": "382d95f8847277123b9a11094e27912b6bd776e7"
+          }
+        },
         {
           "client_id": "878637047128-hin0288764l2mf8kpbmplcscbca46rsk.apps.googleusercontent.com",
           "client_type": 1,
@@ -27,6 +36,14 @@
           "android_info": {
             "package_name": "com.example.brainpath",
             "certificate_hash": "aecac411dfee88b0c6462ffc4c134b25abd6f09b"
+          }
+        },
+        {
+          "client_id": "878637047128-s01mmvitmkm0rqauu8kt643hjgra4qnd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.brainpath",
+            "certificate_hash": "14fd14c741a695d4c1128cbedd64761feae6393b"
           }
         },
         {
