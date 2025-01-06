@@ -4,6 +4,7 @@
 
     <!-- App-wide permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -40,6 +41,8 @@
 
         <!-- INTERACTION MODULE -->
         <activity android:name=".ui.interaction.ChatActivity" android:exported="true" />
+        <activity android:name=".ui.interaction.ForumActivity" android:exported="true" />
+        <activity android:name=".ui.interaction.ForumPostActivity" android:exported="true" />
         <activity android:name=".ui.interaction.FriendListActivity" android:exported="true" />
         <activity android:name=".ui.interaction.InteractionAddActivity" android:exported="true" />
 
