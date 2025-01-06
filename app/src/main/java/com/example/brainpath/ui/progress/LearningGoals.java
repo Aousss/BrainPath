@@ -1,4 +1,4 @@
-package com.example.brainpath;
+package com.example.brainpath.ui.progress;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.brainpath.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;

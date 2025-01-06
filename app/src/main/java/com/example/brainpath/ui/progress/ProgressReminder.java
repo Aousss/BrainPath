@@ -1,4 +1,4 @@
-package com.example.brainpath;
+package com.example.brainpath.ui.progress;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
+import com.example.brainpath.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 

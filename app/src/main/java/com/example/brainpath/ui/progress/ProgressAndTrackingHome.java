@@ -1,10 +1,9 @@
-package com.example.brainpath;
+package com.example.brainpath.ui.progress;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;

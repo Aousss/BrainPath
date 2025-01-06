@@ -5,20 +5,29 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_assessment">
 
+    <!--  ASSESSMENT NAVIGATION  -->
     <fragment
         android:id="@+id/navigation_assessment"
         android:name="com.example.brainpath.ui.home.HomeFragment"
         android:label="@string/title_assessment"
         tools:layout="@layout/fragment_home" />
 
-    <activity
+    <!--  INTERACTION NAVIGATION  -->
+    <fragment
         android:id="@+id/navigation_interaction"
-        android:name="com.example.brainpath.ui.interaction.FriendListActivity"
+        android:name="com.example.brainpath.ui.interaction.FriendListFragment"
         android:label="@string/title_interaction"
         tools:layout="@layout/fragment_dashboard">
+    </fragment>
 
-    </activity>
+    <fragment
+        android:id="@+id/navigation_addFragment"
+        android:name="com.example.brainpath.ui.interaction.InteractionAddFragment"
+        android:label="addFragment"
+        tools:layout="@layout/fragment_dashboard">
+    </fragment>
 
+    <!--  RESOURCES NAVIGATION  -->
     <fragment
         android:id="@+id/navigation_resources"
         android:name="com.example.brainpath.ui.resources.ResourcesFragment"
@@ -37,7 +46,7 @@
         android:label="Details"
         tools:layout="@layout/activity_resources_details" />
 
-
+    <!--  PROFILE NAVIGATION  -->
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.brainpath.ui.profile.ProfileFragment"

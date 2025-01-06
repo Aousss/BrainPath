@@ -40,11 +40,8 @@
         <activity android:name=".ui.profile.RegisterActivity" android:exported="true" />
 
         <!-- INTERACTION MODULE -->
-        <activity android:name=".ui.interaction.ChatActivity" android:exported="true" />
         <activity android:name=".ui.interaction.ForumActivity" android:exported="true" />
         <activity android:name=".ui.interaction.ForumPostActivity" android:exported="true" />
-        <activity android:name=".ui.interaction.FriendListActivity" android:exported="true" />
-        <activity android:name=".ui.interaction.InteractionAddActivity" android:exported="true" />
 
         <!-- RESOURCES MODULE -->
 
