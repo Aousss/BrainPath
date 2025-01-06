@@ -1,6 +1,5 @@
 package com.example.brainpath.ui.resources;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -17,9 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
-import android.widget.Button;
-import android.widget.Toast;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.brainpath.R;
 
@@ -28,78 +26,42 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class ResourceDetailsFragment extends Fragment {
+public class DetailsFragment extends Fragment {
 
-    private String title, desc, previewUrl;
+    private ResourcesViewModel viewModel;
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                // Handle back press in the fragment
-                requireActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
-    }
-
-
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_resources_details, container, false);
 
-        // Get arguments passed to this fragment
+        // Retrieve arguments passed from ResourcesFragment
+        String title = null;
+        String desc = null;
+        String previewUrl = null;
+
         if (getArguments() != null) {
             title = getArguments().getString("RESOURCE_TITLE");
-            desc = getArguments().getString("RESOURCE_DESC"); // This is the short desc
+            desc = getArguments().getString("RESOURCE_DESC");
             previewUrl = getArguments().getString("RESOURCE_PREVIEW_URL");
         }
 
         // Initialize UI components
         TextView titleView = view.findViewById(R.id.resDetailsTitle);
-        TextView descView = view.findViewById(R.id.resDetailsDesc); // Display short desc
+        TextView descView = view.findViewById(R.id.resDetailsDesc);
         ImageView previewView = view.findViewById(R.id.resDetailsPreview);
 
-        // Set data to UI components
+        // Set the data to the UI components
         titleView.setText(title);
-        descView.setText(desc); // Set the short desc here
+        descView.setText(desc);
 
-        // Load the image without Glide
-        new ImageLoaderTask(previewView).execute(previewUrl);
+        // Load the preview image (if available)
+        if (previewUrl != null) {
+            new ImageLoaderTask(previewView).execute(previewUrl);
+        }
 
         return view;
     }
 
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        // Reset the toolbar when exiting the fragment
-        if (getActivity() instanceof AppCompatActivity) {
-            AppCompatActivity activity = (AppCompatActivity) getActivity();
-            if (activity.getSupportActionBar() != null) {
-                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                activity.getSupportActionBar().setTitle(R.string.app_name); // Reset title to app name
-            }
-        }
-    }
-
-    // Override onOptionsItemSelected to handle the back button press
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            requireActivity().getSupportFragmentManager().popBackStack();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    // AsyncTask to load images from a URL
     private static class ImageLoaderTask extends AsyncTask<String, Void, Bitmap> {
         private final ImageView imageView;
 
@@ -127,10 +89,9 @@ public class ResourceDetailsFragment extends Fragment {
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
-                imageView.setImageResource(R.drawable.bp_logo_color); // Fallback image in case of failure
+                imageView.setImageResource(R.drawable.chat_textbox); // Fallback image
             }
         }
     }
-
 
 }
