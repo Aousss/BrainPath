@@ -66,16 +66,8 @@ public class ForumPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interaction_forum_post);
 
-        // Check and request permissions if needed
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-        }
-
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-            }
-        }
+        // Check and request permissions
+        checkAndRequestPermissions();
 
         forumTitle = findViewById(R.id.forumTitle);
         forumDesc = findViewById(R.id.forumDesc);
@@ -93,6 +85,39 @@ public class ForumPostActivity extends AppCompatActivity {
         postButton.setOnClickListener(v -> addPost());
         attachmentButton.setOnClickListener(v -> openFilePicker());
         photoButton.setOnClickListener(v -> openImageGallery());
+    }
+
+    private void checkAndRequestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+            } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P &&
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            boolean allGranted = true;
+
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    allGranted = false;
+                    break;
+                }
+            }
+
+            if (allGranted) {
+                Toast.makeText(this, "All permissions granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Some permissions were denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void addPost() {
@@ -142,7 +167,6 @@ public class ForumPostActivity extends AppCompatActivity {
     }
 
     private void uploadImageAndCreatePost(HashMap<String, Object> post) {
-        // Use a unique name for the image and save it to Firebase Storage
         StorageReference fileReference = storageRef.child("forum/images/" + System.currentTimeMillis() + ".jpg");
 
         fileReference.putFile(selectedImageUri)
@@ -151,34 +175,14 @@ public class ForumPostActivity extends AppCompatActivity {
                     attachmentPreview.setText(getString(R.string.uploading_image_progress, (int) progress));
                     Log.d("ForumPostActivity", "Upload progress: " + progress + "%");
                 })
-                .addOnSuccessListener(taskSnapshot -> {
-                    Log.d("ForumPostActivity", "Image upload successful!");
-
-                    // Now, we will try to get the download URL of the uploaded image
-                    fileReference.getDownloadUrl()
-                            .addOnSuccessListener(uri -> {
-                                // Log the image URL for debugging
-                                Log.d("ForumPostActivity", "Image uploaded. URL: " + uri.toString());
-
-                                // Add the imageUrl to the post
-                                post.put("imageUrl", uri.toString());
-
-                                // Now that the image URL is added, create the post in Firestore
-                                createPostInFirestore(post);
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("ForumPostActivity", "Failed to get image URL: " + e.getMessage());
-                                attachmentPreview.setText(getString(R.string.upload_failed));
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("ForumPostActivity", "Image upload failed: " + e.getMessage());
-                    attachmentPreview.setText(getString(R.string.upload_failed));
-                });
+                .addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl()
+                        .addOnSuccessListener(uri -> {
+                            post.put("imageUrl", uri.toString());
+                            createPostInFirestore(post);
+                        })
+                        .addOnFailureListener(e -> attachmentPreview.setText(getString(R.string.upload_failed))))
+                .addOnFailureListener(e -> attachmentPreview.setText(getString(R.string.upload_failed)));
     }
-
-
-
 
     private void uploadFileAndCreatePost(HashMap<String, Object> post) {
         String fileExtension = getFileExtension(selectedFileUri);
@@ -193,42 +197,21 @@ public class ForumPostActivity extends AppCompatActivity {
                 })
                 .addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl()
                         .addOnSuccessListener(uri -> {
-                            // Store file URL in forumFiles collection
-                            HashMap<String, Object> fileData = new HashMap<>();
-                            fileData.put("fileUrl", uri.toString());
-
-                            firestore.collection("forumFiles").add(fileData)
-                                    .addOnSuccessListener(fileDocRef -> {
-                                        // Save file document ID in the post
-                                        post.put("fileDocId", fileDocRef.getId());
-                                        createPostInFirestore(post);
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        attachmentPreview.setText(getString(R.string.upload_failed));
-                                    });
+                            post.put("fileUrl", uri.toString());
+                            createPostInFirestore(post);
                         })
-                        .addOnFailureListener(e -> {
-                            attachmentPreview.setText(getString(R.string.upload_failed));
-                        }))
-                .addOnFailureListener(e -> {
-                    attachmentPreview.setText(getString(R.string.upload_failed));
-                });
+                        .addOnFailureListener(e -> attachmentPreview.setText(getString(R.string.upload_failed))))
+                .addOnFailureListener(e -> attachmentPreview.setText(getString(R.string.upload_failed)));
     }
 
     private void createPostInFirestore(HashMap<String, Object> post) {
         firestore.collection("forumPosts").add(post)
                 .addOnSuccessListener(documentReference -> {
-                    Log.d("ForumPostActivity", "Post created successfully with ID: " + documentReference.getId());
                     Toast.makeText(this, "Post added successfully!", Toast.LENGTH_SHORT).show();
                     finish();
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("ForumPostActivity", "Error creating post: " + e.getMessage());
-                    Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
-
-
 
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -263,18 +246,5 @@ public class ForumPostActivity extends AppCompatActivity {
             return fileName.substring(fileName.lastIndexOf("."));
         }
         return "";
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 }
