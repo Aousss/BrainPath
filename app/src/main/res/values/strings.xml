@@ -5,5 +5,10 @@
     <string name="title_resources">Resources</string>
     <string name="title_profile">Profile</string>
     <string name="default_notification_channel_id">default_channel</string>
+    <string name="uploading_image_progress">Uploading image: %1$d%%</string>
+    <string name="upload_failed">Upload failed</string>
+    <string name="uploading_file_progress">Uploading file: %1$d%%</string>
+    <string name="selected_file">Selected file: %1$s</string>
+    <string name="selected_image">Selected image: %1$s</string>
 
 </resources>
