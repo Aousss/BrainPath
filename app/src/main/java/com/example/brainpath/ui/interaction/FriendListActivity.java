@@ -75,12 +75,12 @@ public class FriendListActivity extends AppCompatActivity {
                                     .document(friendId)
                                     .get()
                                     .addOnSuccessListener(friendDocument -> {
-                                        // Fetch friend data (name, userId)
-                                        String friendName = friendDocument.getString("name");
+                                        // Fetch friend data (username, userId)
+                                        String friendUsername = friendDocument.getString("username");  // Changed to username
                                         String friendUserId = friendDocument.getId();
 
                                         // Create a new Friend object
-                                        Friend friend = new Friend(friendName, friendUserId);
+                                        Friend friend = new Friend(friendUsername, friendUserId);
 
                                         // Add friend to the list and notify the adapter
                                         friendsList.add(friend);
@@ -100,4 +100,5 @@ public class FriendListActivity extends AppCompatActivity {
                     Toast.makeText(FriendListActivity.this, "Error fetching friends: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
 }

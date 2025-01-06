@@ -1,15 +1,15 @@
 package com.example.brainpath.ui.interaction;
 public class Friend {
-    private String name;
+    private String username;  // Changed to username
     private String userId;
 
-    public Friend(String name, String userId) {
-        this.name = name;
+    public Friend(String username, String userId) {
+        this.username = username;
         this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     public String getUserId() {

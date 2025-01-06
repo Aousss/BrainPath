@@ -47,7 +47,7 @@ public class InteractionAddActivity extends AppCompatActivity {
     }
 
     private void showAddDialog(String type) {
-        // Create an input dialog for adding friend or community
+        // Create an input dialog for adding friend, group, or community
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add " + capitalize(type));
 
@@ -63,11 +63,13 @@ public class InteractionAddActivity extends AppCompatActivity {
                 return;
             }
 
-            // Check if it's a friend or community
+            // Check if it's a friend, group, or community
             if (type.equals("friend")) {
-                addFriend(inputName);
+                addFriend(inputName); // Existing method for adding a friend
             } else if (type.equals("community")) {
-                addCommunity(inputName);
+                addCommunity(inputName); // Existing method for adding a community
+            } else if (type.equals("group")) {
+                addGroup(inputName); // New method for adding a group
             }
         });
 
@@ -75,6 +77,7 @@ public class InteractionAddActivity extends AppCompatActivity {
 
         builder.create().show();
     }
+
 
     private void addFriend(String inputName) {
         // Get the current user's ID dynamically from Firebase Authentication
@@ -126,37 +129,31 @@ public class InteractionAddActivity extends AppCompatActivity {
         // Create a new group document with the provided group name and an empty members list
         Map<String, Object> groupData = new HashMap<>();
         groupData.put("groupName", groupName);
-        groupData.put("members", new ArrayList<String>());  // Start with no members
+        groupData.put("members", new ArrayList<String>()); // Start with no members
 
         // Add the group to the "groups" collection
         db.collection("groups")
                 .add(groupData)
                 .addOnSuccessListener(documentReference -> {
-                    String groupId = documentReference.getId();  // Get the new group's ID
+                    String groupId = documentReference.getId(); // Get the new group's ID
 
-                    // Now, add the current user as the first member of the group
+                    // Add the current user as the first member of the group
                     db.collection("groups")
                             .document(groupId)
                             .update("members", FieldValue.arrayUnion(currentUserId))
                             .addOnSuccessListener(aVoid -> {
-                                // Fetch the current user's friend list
+                                // Optionally, add the group to the current user's list of groups
                                 db.collection("users")
                                         .document(currentUserId)
-                                        .get()
-                                        .addOnSuccessListener(userDocument -> {
-                                            if (userDocument.exists()) {
-                                                List<String> friendIds = (List<String>) userDocument.get("friendIds");
+                                        .update("groupIds", FieldValue.arrayUnion(groupId))
+                                        .addOnSuccessListener(aVoid1 -> {
+                                            Toast.makeText(this, "Group created. Now select friends to add!", Toast.LENGTH_SHORT).show();
 
-                                                if (friendIds != null && !friendIds.isEmpty()) {
-                                                    // Show a dialog to select friends to add to the group
-                                                    showFriendSelectionDialog(friendIds, groupId);
-                                                } else {
-                                                    Toast.makeText(this, "You have no friends to add to the group.", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
+                                            // Fetch the user's friend list and show selection dialog
+                                            fetchFriendsAndShowSelectionDialog(currentUserId, groupId);
                                         })
                                         .addOnFailureListener(e -> {
-                                            Toast.makeText(this, "Error retrieving user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(this, "Error adding group to user's list: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         });
                             })
                             .addOnFailureListener(e -> {
@@ -168,9 +165,32 @@ public class InteractionAddActivity extends AppCompatActivity {
                 });
     }
 
-    private void showFriendSelectionDialog(List<String> friendIds, String groupId) {
-        // Fetch the names of friends from the friend IDs
+    private void fetchFriendsAndShowSelectionDialog(String currentUserId, String groupId) {
+        // Fetch the user's friend list from Firestore
+        db.collection("users")
+                .document(currentUserId)
+                .get()
+                .addOnSuccessListener(userDocument -> {
+                    if (userDocument.exists()) {
+                        List<String> friendIds = (List<String>) userDocument.get("friendIds");
+
+                        if (friendIds != null && !friendIds.isEmpty()) {
+                            // Fetch friend names and show selection dialog
+                            fetchFriendNamesAndShowDialog(friendIds, groupId, currentUserId);
+                        } else {
+                            Toast.makeText(this, "You have no friends to add to the group.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error retrieving friend list: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void fetchFriendNamesAndShowDialog(List<String> friendIds, String groupId, String currentUserId) {
         List<String> friendNames = new ArrayList<>();
+        List<String> fetchedFriendIds = new ArrayList<>();
+
         for (String friendId : friendIds) {
             db.collection("users")
                     .document(friendId)
@@ -180,11 +200,12 @@ public class InteractionAddActivity extends AppCompatActivity {
                             String friendName = friendDocument.getString("username");
                             if (friendName != null) {
                                 friendNames.add(friendName);
+                                fetchedFriendIds.add(friendId);
                             }
 
                             // If all friend names have been retrieved, show the selection dialog
                             if (friendNames.size() == friendIds.size()) {
-                                showFriendSelectionDialogWithNames(friendIds, friendNames, groupId);
+                                showFriendSelectionDialog(friendNames, fetchedFriendIds, groupId, currentUserId);
                             }
                         }
                     })
@@ -194,7 +215,7 @@ public class InteractionAddActivity extends AppCompatActivity {
         }
     }
 
-    private void showFriendSelectionDialogWithNames(List<String> friendIds, List<String> friendNames, String groupId) {
+    private void showFriendSelectionDialog(List<String> friendNames, List<String> friendIds, String groupId, String currentUserId) {
         boolean[] selectedFriends = new boolean[friendNames.size()];
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -213,10 +234,11 @@ public class InteractionAddActivity extends AppCompatActivity {
                         }
                     }
 
-                    // Add selected friends to the group
+                    // Add the current user ID and selected friends' IDs to the group
+                    selectedFriendIds.add(currentUserId); // Ensure current user is also added
                     db.collection("groups")
                             .document(groupId)
-                            .update("members", FieldValue.arrayUnion(selectedFriendIds))
+                            .update("members", FieldValue.arrayUnion(selectedFriendIds.toArray()))
                             .addOnSuccessListener(aVoid -> {
                                 Toast.makeText(this, "Friends added to the group!", Toast.LENGTH_SHORT).show();
                             })
