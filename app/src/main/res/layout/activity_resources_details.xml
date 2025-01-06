@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginBottom="60dp">
+
+    <!--  CONTENTS -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/light_white"
+        app:cardCornerRadius="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/contentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentTop="true"
+                android:layout_above="@+id/functionButton">
+
+                <ImageView
+                    android:id="@+id/resDetailsPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:src="@drawable/bg"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/resDetailsTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Let's Play Maths"
+                    android:padding="10dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/dark_grey"
+                    android:gravity="center" />
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp">
+
+                    <TextView
+                        android:id="@+id/resDetailsDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Do you know how to solve these problems? Here's some text to demonstrate scrolling. Add more content to make it scrollable."
+                        android:textColor="@color/dark_grey"
+                        android:textSize="16dp"
+                        android:padding="10dp" />
+                </ScrollView>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/functionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                android:text="Learn More"
+                android:textAllCaps="false"
+                android:textColor="@color/light_grey"
+                android:textStyle="italic|bold"
+                android:background="@drawable/button_background_3"
+                android:visibility="invisible"/>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

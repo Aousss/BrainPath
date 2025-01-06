@@ -1,64 +1,62 @@
 package com.example.brainpath.ui.interaction;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.brainpath.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendViewHolder> {
 
     private Context context;
-    private List<Friend> friendList;
-    private OnFriendClickListener onFriendClickListener;
+    private List<Friend> friendsList;
+    private OnItemClickListener onItemClickListener;
 
-    public FriendAdapter(Context context, List<Friend> friendList, OnFriendClickListener onFriendClickListener) {
+    // Constructor
+    public FriendAdapter(Context context, List<Friend> friendsList, OnItemClickListener listener) {
         this.context = context;
-        this.friendList = friendList;
-        this.onFriendClickListener = onFriendClickListener;
-    }
-
-    @NonNull
-    @Override
-    public FriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_friend, parent, false);
-        return new FriendViewHolder(view);
+        this.friendsList = friendsList;
+        this.onItemClickListener = listener;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
-        Friend friend = friendList.get(position);
-        holder.usernameTextView.setText(friend.getUsername());
+    public FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(context).inflate(R.layout.item_friend, parent, false);
+        return new FriendViewHolder(itemView);
+    }
 
-        holder.itemView.setOnClickListener(v -> onFriendClickListener.onFriendClick(friend));
+    @Override
+    public void onBindViewHolder(FriendViewHolder holder, int position) {
+        Friend friend = friendsList.get(position);
+        holder.friendNameTextView.setText(friend.getName());
+
+        // Set click listener on the item
+        holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(friend));
     }
 
     @Override
     public int getItemCount() {
-        return friendList.size();
+        return friendsList.size();
     }
 
-    public interface OnFriendClickListener {
-        void onFriendClick(Friend friend);
-    }
-
+    // ViewHolder for the Friend item
     public static class FriendViewHolder extends RecyclerView.ViewHolder {
+        TextView friendNameTextView;
 
-        TextView usernameTextView;
-
-        public FriendViewHolder(@NonNull View itemView) {
+        public FriendViewHolder(View itemView) {
             super(itemView);
-            usernameTextView = itemView.findViewById(R.id.friendNameTextView);  // Adjust ID as needed
+            friendNameTextView = itemView.findViewById(R.id.friendNameTextView);
         }
     }
-}
 
+    // Interface for item click listener
+    public interface OnItemClickListener {
+        void onItemClick(Friend friend);
+    }
+}

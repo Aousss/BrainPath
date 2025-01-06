@@ -2,14 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- App-wide permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -34,30 +30,37 @@
             </intent-filter>
         </activity>
 
-        <!-- SIGN IN ACTIVITY -->
-        <activity android:name=".ui.profile.SignInActivity" android:exported="true" />
-
-        <!-- FORGOT PASSWORD -->
-        <activity android:name=".ui.profile.ForgotPassword" android:exported="true" />
-
-        <!-- REGISTER ACTIVITY -->
-        <activity android:name=".ui.profile.RegisterActivity" android:exported="true" />
-
         <!-- MAIN ACTIVITY -->
         <activity android:name=".MainActivity" android:exported="true" />
 
-        <!-- FRIEND LIST ACTIVITY -->
-        <activity android:name=".ui.interaction.FriendListActivity" android:exported="true" />
+        <!-- PROFILE MODULE -->
+        <activity android:name=".ui.profile.SignInActivity" android:exported="true" />
+        <activity android:name=".ui.profile.ForgotPassword" android:exported="true" />
+        <activity android:name=".ui.profile.RegisterActivity" android:exported="true" />
 
-        <!-- CHAT ACTIVITY -->
+        <!-- INTERACTION MODULE -->
         <activity android:name=".ui.interaction.ChatActivity" android:exported="true" />
-
-        <!-- INTERACTION ADD ACTIVITY -->
+        <activity android:name=".ui.interaction.FriendListActivity" android:exported="true" />
         <activity android:name=".ui.interaction.InteractionAddActivity" android:exported="true" />
 
-        <!-- FORUM ACTIVITIES -->
-        <activity android:name=".ui.interaction.ForumActivity" android:exported="true" />
-        <activity android:name=".ui.interaction.ForumPostActivity" android:exported="true" />
+        <!-- RESOURCES MODULE -->
+
+        <!-- FIREBASE CONFIGURATION -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+        <meta-data
+            android:name="com.google.firebase.analytics.FirebaseAnalytics.Event"
+            android:value="true" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBO2HGGKA0hXwESDN8A3xbJg0VxDGHPW-Y" />
 
     </application>
+
 </manifest>
