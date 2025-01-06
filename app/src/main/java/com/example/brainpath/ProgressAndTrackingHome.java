@@ -9,8 +9,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.brainpath.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,7 +25,7 @@ public class ProgressAndTrackingHome extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_prgress_and_tracking);
+        setContentView(R.layout.activity_progress_and_tracking);
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
