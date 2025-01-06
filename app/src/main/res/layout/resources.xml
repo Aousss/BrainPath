@@ -47,7 +47,7 @@
                 <ImageView android:id="@+id/resPreview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/bg"
+                    android:src="@drawable/image_load"
                     android:scaleType="centerCrop">
 
                 </ImageView>
