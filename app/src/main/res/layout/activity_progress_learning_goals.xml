@@ -40,19 +40,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="20dp"
-                    android:text="8H"
+                    android:text="8"
                     android:textColor="@color/dark_grey"
                     android:textSize="30sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="20dp"
-                    android:text="/week"
+                    android:text="H/week"
                     android:textColor="@color/dark_grey"
                     android:textSize="30sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -110,14 +110,15 @@
                             android:background="@color/blue"/>
 
                         <TextView
+                            android:id="@+id/achieved"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:gravity="center"
                             android:paddingBottom="5dp"
                             android:text="26 times"
-                            android:textStyle="bold|italic"
                             android:textSize="18sp"
-                            android:gravity="center"
-                            android:background="@color/white"/>
+                            android:textStyle="bold|italic" />
 
                     </LinearLayout>
 
@@ -151,14 +152,15 @@
                             android:background="@color/blue"/>
 
                         <TextView
+                            android:id="@+id/average"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingBottom="5dp"
-                            android:text="26 times"
-                            android:textStyle="bold|italic"
-                            android:textSize="18sp"
+                            android:background="@color/white"
                             android:gravity="center"
-                            android:background="@color/white"/>
+                            android:paddingBottom="5dp"
+                            android:text="26 Hours"
+                            android:textSize="18sp"
+                            android:textStyle="bold|italic" />
 
                     </LinearLayout>
 
@@ -177,53 +179,62 @@
 
             <!--MOST LEARNED TOPICS-->
             <androidx.cardview.widget.CardView
+                android:id="@+id/subjectsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="10dp"
                 app:cardCornerRadius="10dp">
 
-                <LinearLayout
+                <ScrollView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_margin="10dp">
+                    android:fillViewport="true">
+                <LinearLayout
+                    android:id="@+id/subjLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
 
                     <!--TOPICS #1-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:orientation="horizontal"
-                        android:layout_margin="5dp">
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
 
-                        <TextView android:text="Mathematics"
+                        <TextView
+                            android:id="@+id/subjectName"
                             android:layout_width="120dp"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:textSize="16sp"/>
+                            android:text="Mathematics"
+                            android:textSize="16sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
 
                             <ProgressBar
-                                android:id="@+id/timeProgressBarMaths"
+                                android:id="@+id/subjectProgress"
+                                style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="7dp"
-                                android:progress="100"
-                                android:max="100"
                                 android:indeterminate="false"
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:progressDrawable="@drawable/learning_goals_progress"/>
+                                android:max="100"
+                                android:progress="0"
+                                android:progressDrawable="@drawable/learning_goals_progress" />
 
                             <TextView
-                                android:id="@+id/timeBarMaths"
+                                android:id="@+id/studyTime"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="4h 42m"
-                                android:textSize="12sp"/>
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
@@ -233,37 +244,38 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:orientation="horizontal"
-                        android:layout_margin="5dp">
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
 
-                        <TextView android:text="Science"
+                        <TextView
                             android:layout_width="120dp"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:textSize="16sp"/>
+                            android:text="Science"
+                            android:textSize="16sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
 
                             <ProgressBar
                                 android:id="@+id/timeProgressBarScience"
+                                style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="7dp"
-                                android:progress="70"
-                                android:max="100"
                                 android:indeterminate="false"
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:progressDrawable="@drawable/learning_goals_progress"/>
+                                android:max="100"
+                                android:progress="0"
+                                android:progressDrawable="@drawable/learning_goals_progress" />
 
                             <TextView
                                 android:id="@+id/timeBarScience"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="3h 55m"
-                                android:textSize="12sp"/>
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
@@ -273,43 +285,45 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:orientation="horizontal"
-                        android:layout_margin="5dp">
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
 
-                        <TextView android:text="English"
+                        <TextView
                             android:layout_width="120dp"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:textSize="16sp"/>
+                            android:text="English"
+                            android:textSize="16sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
 
                             <ProgressBar
                                 android:id="@+id/timeProgressBarEnglish"
+                                style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="7dp"
-                                android:progress="60"
-                                android:max="100"
                                 android:indeterminate="false"
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:progressDrawable="@drawable/learning_goals_progress"/>
+                                android:max="100"
+                                android:progress="0"
+                                android:progressDrawable="@drawable/learning_goals_progress" />
 
                             <TextView
                                 android:id="@+id/timeBarEnglish"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="3h 30m"
-                                android:textSize="12sp"/>
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
+                </ScrollView>
 
 
             </androidx.cardview.widget.CardView>
