@@ -15,13 +15,28 @@
         android:id="@+id/navigation_interaction"
         android:name="com.example.brainpath.ui.interaction.FriendListActivity"
         android:label="@string/title_interaction"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard">
+
+    </activity>
 
     <fragment
         android:id="@+id/navigation_resources"
         android:name="com.example.brainpath.ui.resources.ResourcesFragment"
         android:label="@string/title_resources"
-        tools:layout="@layout/activity_resources"/>
+        tools:layout="@layout/activity_resources">
+        <!-- Action to navigate to DetailsFragment -->
+        <action
+            android:id="@+id/action_resourcesFragment_to_detailsFragment"
+            app:destination="@+id/navigation_details" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_details"
+        android:name="com.example.brainpath.ui.resources.DetailsFragment"
+        android:label="Details"
+        tools:layout="@layout/activity_resources_details" />
+
 
     <fragment
         android:id="@+id/navigation_profile"

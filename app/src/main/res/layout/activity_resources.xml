@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
+    android:id="@+id/Rescource_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -41,32 +42,49 @@
             <LinearLayout android:id="@+id/searchbarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp"
-                android:background="@drawable/chat_textbox">
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/searchResources"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    android:paddingStart="20dp"
-                    android:hint="Search"
-                    android:background="@android:color/transparent"
-                    android:layout_gravity="center_vertical"/>
+                <RadioGroup
+                    android:id="@+id/topicRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
-                <!-- SEARCH BUTTON -->
-                <ImageButton
-                    android:id="@+id/searchButton"
-                    android:layout_width="60dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_search"
-                    android:background="@android:color/transparent"
-                    android:scaleType="centerInside"
-                    android:contentDescription="Search Friend"
-                    android:paddingEnd="10dp"
-                    android:layout_gravity="center"/>
+                    <RadioButton
+                        android:id="@+id/radioAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="All"
+                        android:layout_marginHorizontal="5dp"
+                        android:buttonTint="@color/radio_button_blue"
+                        android:checked="true"/>
+
+                    <RadioButton
+                        android:id="@+id/radioMath"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Maths"
+                        android:layout_marginHorizontal="5dp"
+                        android:buttonTint="@color/radio_button_blue"/>
+
+                    <RadioButton
+                        android:id="@+id/radioScience"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:buttonTint="@color/radio_button_blue"
+                        android:text="Science" />
+
+                    <RadioButton
+                        android:id="@+id/radioEnglish"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:buttonTint="@color/radio_button_blue"
+                        android:text="English" />
+                </RadioGroup>
+
 
             </LinearLayout>
 

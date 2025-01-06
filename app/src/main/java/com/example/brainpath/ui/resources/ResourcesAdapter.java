@@ -54,6 +54,12 @@ public class ResourcesAdapter extends RecyclerView.Adapter<ResourcesAdapter.Reso
     }
 
 
+    // New method to update the resources list
+    public void updateResources(List<Resources> newResources) {
+        resourcesList.clear();          // Clear the old list
+        resourcesList.addAll(newResources);  // Add new resources
+        notifyDataSetChanged();         // Notify RecyclerView to refresh
+    }
 
     @Override
     public int getItemCount() {

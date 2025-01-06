@@ -1,16 +1,20 @@
 package com.example.brainpath.ui.resources;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,21 +29,18 @@ public class ResourcesFragment extends Fragment {
 
     private RecyclerView resourcesRecyclerView;
     private ResourcesAdapter adapter;
-    private List<Resources> resourceList;
     private FirebaseFirestore db;
     private ResourcesViewModel viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         db = FirebaseFirestore.getInstance();
-
-        // Initialize ViewModel to persist data
         viewModel = new ViewModelProvider(requireActivity()).get(ResourcesViewModel.class);
+
+
     }
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_resources, container, false);
@@ -48,84 +49,91 @@ public class ResourcesFragment extends Fragment {
         resourcesRecyclerView = view.findViewById(R.id.resourcesActivity_recyclerView);
         resourcesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Initialize adapter and attach to RecyclerView
-        if (resourceList == null) {
-            resourceList = new ArrayList<>();
-        }
-        if (adapter == null) {
-            adapter = new ResourcesAdapter(getContext(), resourceList, resource -> {
-                // Navigate to details fragment
-                ResourceDetailsFragment detailsFragment = new ResourceDetailsFragment();
-                Bundle args = new Bundle();
-                args.putString("RESOURCE_TITLE", resource.getResTitle());
-                args.putString("RESOURCE_DESC", resource.getResDesc()); // Use desc for ResourceDetailsFragment
-                args.putString("RESOURCE_PREVIEW_URL", resource.getResPreview());
-                detailsFragment.setArguments(args);
-
-                requireActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.container, detailsFragment)
-                        .addToBackStack(null)
-                        .commit();
-            });
-
-        }
+        // Initialize Adapter
+        adapter = new ResourcesAdapter(getContext(), new ArrayList<>(), resource -> {
+            // Navigate to DetailsFragment with arguments
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+            Bundle args = new Bundle();
+            args.putString("RESOURCE_TITLE", resource.getResTitle());
+            args.putString("RESOURCE_DESC", resource.getResDesc());
+            args.putString("RESOURCE_PREVIEW_URL", resource.getResPreview());
+            navController.navigate(R.id.action_resourcesFragment_to_detailsFragment, args);
+        });
         resourcesRecyclerView.setAdapter(adapter);
 
-        // Fetch resources if needed
-        if (resourceList.isEmpty()) {
-            fetchResources();
-        }
+        // Set "All" as default selection
+        RadioButton radioAll = view.findViewById(R.id.radioAll);
+        radioAll.setChecked(true);  // Select "All" by default
+
+        // Display all resources initially
+        displayAllResources();
+
+
+        // Observe resources in ViewModel
+        viewModel.getResources().observe(getViewLifecycleOwner(), resources -> {
+            if (resources != null) {
+                adapter.updateResources(resources);
+            }
+        });
+
+        // Apply the filtered functions
+        RadioGroup topicRadioGroup = view.findViewById(R.id.topicRadioGroup);
+        topicRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radioAll) {
+                displayAllResources();
+            } else {
+                int selectedTopicID = 0;
+                if (checkedId == R.id.radioMath) {
+                    selectedTopicID = 1;
+                } else if (checkedId == R.id.radioScience) {
+                    selectedTopicID = 2;
+                } else if (checkedId == R.id.radioEnglish) {
+                    selectedTopicID = 3;
+                }
+                applyFilter(selectedTopicID);
+            }
+        });
+
+        fetchResources();
 
         return view;
     }
 
-    private void openResource(Resources resource) {
-        Intent intent = new Intent(getContext(), ResourceDetailsFragment.class);
-        intent.putExtra("RESOURCE_TITLE", resource.getResTitle());
-        intent.putExtra("RESOURCE_DESC", resource.getResDesc());
-        intent.putExtra("RESOURCE_PREVIEW_URL", resource.getResPreview());
-        startActivity(intent);
+    private void applyFilter(int topicID) {
+        List<Resources> filteredResources = new ArrayList<>();
+        for (Resources resource : viewModel.getResources().getValue()) {
+            if (resource.getResID() == topicID) {
+                filteredResources.add(resource);
+            }
+        }
+        adapter.updateResources(filteredResources);
+    }
+
+    private void displayAllResources() {
+        List<Resources> allResources = viewModel.getResources().getValue();
+        adapter.updateResources(allResources);
     }
 
     private void fetchResources() {
-        if (db == null) {
-            Log.e("ResourcesFragment", "Firestore instance is null");
-            return;
-        }
-
-        Log.d("ResourcesFragment", "Fetching resources from Firestore...");
-
         db.collection("resources")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.d("ResourcesFragment", "Resources fetch successful");
-                        resourceList.clear();
-
+                        List<Resources> resourcesList = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d("ResourcesFragment", "Document data: " + document.getData());
-
                             Resources resource = new Resources(
                                     document.getString("title"),
-                                    document.getString("desc"),        // Use short desc for details
-                                    document.getString("fullDesc"),   // Use fullDesc for list
-                                    document.getString("preview")
+                                    document.getString("desc"),
+                                    document.getString("fullDesc"),
+                                    document.getString("preview"),
+                                    document.getLong("resID").intValue()
                             );
-                            resourceList.add(resource);
-
+                            resourcesList.add(resource);
                         }
-
-                        // Update ViewModel with the fetched data
-                        viewModel.setResources(resourceList);
-
-                        // Notify adapter about the changes
-                        adapter.notifyDataSetChanged();
+                        viewModel.setResources(resourcesList);
                     } else {
                         Log.e("ResourcesFragment", "Error fetching resources", task.getException());
                     }
                 });
     }
-
 }
-
