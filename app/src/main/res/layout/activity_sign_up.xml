@@ -6,7 +6,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/blue_gradient"
     tools:context=".ui.profile.SignInActivity">
 
     <!--    APP LOGO DISPLAY-->
@@ -14,7 +14,7 @@
         android:id="@+id/appLogo"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/bp_logo_color"
+        android:src="@drawable/bp_logo_white"
         android:contentDescription="@string/app_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="BrightPath"
-        android:textColor="@color/blue"
+        android:textColor="@color/white"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/appLogo"
@@ -164,50 +164,33 @@
                     android:layout_marginTop="50dp"
                     android:background="@drawable/button_background"
                     android:text="Register"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"
                     android:textColor="@color/white" />
 
-                <!--            OR-->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/straight_line" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:text="or"
-                        android:textColor="@color/light_grey"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/straight_line" />
-                </LinearLayout>
+                    android:text="or"
+                    android:textColor="@color/dark_grey"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:textSize="14sp" />
 
 
-                <!--            GOOGLE SIGN IN BUTTON-->
+                <!--GOOGLE SIGN IN BUTTON-->
                 <Button
                     android:id="@+id/googleSignInButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/button_background"
+                    android:background="@drawable/button_background_2"
                     android:text="Sign in with Google"
-                    android:textColor="@color/white" />
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/blue"
+                    android:textAllCaps="false" />
 
                 <!--            REGISTER NOW-->
                 <LinearLayout
