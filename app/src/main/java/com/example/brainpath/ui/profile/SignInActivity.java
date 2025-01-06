@@ -120,9 +120,6 @@ public class SignInActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        // Set Gradient for Login Button
-        loginBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.blue_gradient));
     }
 
     // Handle Firebase Email and Password Login
