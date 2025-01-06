@@ -65,9 +65,14 @@ dependencies {
     implementation("com.google.firebase:firebase-auth") // Firebase Authentication
     implementation("com.google.firebase:firebase-database") // Firebase Realtime Database
     implementation("com.google.firebase:firebase-firestore") // Firebase Firestore
+    implementation("com.google.firebase:firebase-storage:20.2.1")
 
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.3.0")
+
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1") // Optional, for custom Glide modules
+
 
     // Google Play Services Base
     implementation ("com.google.android.gms:play-services-base:18.2.0")
