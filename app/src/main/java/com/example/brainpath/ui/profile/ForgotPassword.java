@@ -61,7 +61,7 @@ public class ForgotPassword extends AppCompatActivity {
 
     private void forgotPassword_2(String email) {
         TextView emailView = findViewById(R.id.emailForgotPassword);
-        emailView.setText("A password reset link has been sent to: " + email);
+        emailView.setText(email);
 
         Button btnBackToLogin = findViewById(R.id.btnBackToLogin);
         btnBackToLogin.setOnClickListener(new View.OnClickListener() {
