@@ -1,12 +1,10 @@
 package com.example.brainpath.ui.interaction;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,19 +15,14 @@ import java.util.List;
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendViewHolder> {
 
     private Context context;
-    private List<Friend> friendsList;
+    private List<Friend> friendsList;  // Update to List<Friend>
     private OnItemClickListener onItemClickListener;
 
-    // Constructor
+    // Constructor now accepts List<Friend>
     public FriendAdapter(Context context, List<Friend> friendsList, OnItemClickListener listener) {
         this.context = context;
         this.friendsList = friendsList;
         this.onItemClickListener = listener;
-
-        // Show a toast message if there are no friends
-        if (friendsList.isEmpty()) {
-            Toast.makeText(context, "No friends found.  ", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -41,29 +34,17 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
     @Override
     public void onBindViewHolder(FriendViewHolder holder, int position) {
-        // Check if the list is empty before trying to access an item
-        if (friendsList.isEmpty()) {
-            // Do nothing or log if needed
-            return;
-        }
-
         Friend friend = friendsList.get(position);
 
-        // Fetch username (change from 'name' to 'username')
-        String friendUsername = friend.getUsername();  // Updated to use username
-
-        // Debugging log: check if the username is correct
-        Log.d("FriendAdapter", "Binding friend at position " + position + ": " + friendUsername);
+        String friendUsername = friend.getUsername(); // Assuming Friend has a getUsername() method
 
         if (friendUsername != null && !friendUsername.isEmpty()) {
-            holder.friendNameTextView.setText(friendUsername);  // Display the username
+            holder.friendNameTextView.setText(friendUsername);
         } else {
-            // Log error if the username is missing or empty
-            Log.e("FriendAdapter", "Friend username is null or empty at position " + position);
             holder.friendNameTextView.setText("Unknown Friend");
         }
 
-        // Set click listener on the item to trigger action in FriendListActivity
+        // Set click listener on the item to trigger action
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(friend));
     }
 

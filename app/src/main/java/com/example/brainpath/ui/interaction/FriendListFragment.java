@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -29,7 +28,7 @@ public class FriendListFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private FriendAdapter friendAdapter;
-    private List<Friend> friendsList;
+    private List<Friend> friendsList;  // List<Friend> instead of List<String>
     private FirebaseFirestore db;
 
     @Nullable
@@ -43,9 +42,9 @@ public class FriendListFragment extends Fragment {
 
         // Set up RecyclerView
         recyclerView = view.findViewById(R.id.friend_recycler_view);
-        friendsList = new ArrayList<>();
+        friendsList = new ArrayList<>();  // Initialize friends list with Friend objects
 
-        // Pass the OnItemClickListener to the adapter
+        // Initialize the adapter with the friends list (List<Friend>)
         friendAdapter = new FriendAdapter(requireContext(), friendsList, friend -> {
             // Handle friend item click
             Toast.makeText(requireContext(), "Clicked on: " + friend.getUsername(), Toast.LENGTH_SHORT).show();
@@ -57,8 +56,7 @@ public class FriendListFragment extends Fragment {
         // Fetch friends for the current logged-in user
         fetchFriends();
 
-
-        // Add this code for navigation to InteractionAddFragment
+        // Add navigation to InteractionAddFragment
         ImageButton addButton = view.findViewById(R.id.addInteractionButton);
         addButton.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
@@ -79,46 +77,64 @@ public class FriendListFragment extends Fragment {
         // Get the current user's ID
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Fetch the current user's document
+        // Fetch the current user's document to retrieve friendIds
         db.collection("users")
                 .document(currentUserId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    // Fetch friendIds for the current user
-                    List<String> friendIds = (List<String>) documentSnapshot.get("friendIds");
+                    if (documentSnapshot.exists()) {
+                        List<String> friendIds = (List<String>) documentSnapshot.get("friendIds");
 
-                    if (friendIds != null && !friendIds.isEmpty()) {
-                        // Fetch details of each friend
-                        for (String friendId : friendIds) {
-                            db.collection("users")
-                                    .document(friendId)
-                                    .get()
-                                    .addOnSuccessListener(friendDocument -> {
-                                        // Fetch friend data (name, userId)
-                                        String friendName = friendDocument.getString("name");
-                                        String friendUserId = friendDocument.getId();
-
-                                        // Create a new Friend object
-                                        Friend friend = new Friend(friendName, friendUserId);
-
-                                        // Add friend to the list and notify the adapter
-                                        friendsList.add(friend);
-                                        friendAdapter.notifyDataSetChanged();
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        // Handle error when fetching friend data
-                                        Log.e("FriendListFragment", "Error fetching friend: " + e.getMessage());
-                                    });
+                        if (friendIds != null && !friendIds.isEmpty()) {
+                            Log.d("FriendListFragment", "Friend IDs: " + friendIds);
+                            fetchFriendDetails(friendIds); // Fetch details for each friend ID
+                        } else {
+                            Log.d("FriendListFragment", "No friends found.");
+                            friendsList.clear();  // Make sure to clear any previous list data
+                            friendAdapter.notifyDataSetChanged(); // Update UI to show empty state
                         }
                     } else {
-                        // Set the adapter to show the empty state
-                        friendsList.clear();
-                        friendAdapter.notifyDataSetChanged();
+                        Log.e("FriendListFragment", "User document does not exist.");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // Handle error when fetching the current user's data
-                    Toast.makeText(requireContext(), "Error fetching friends: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("FriendListFragment", "Error fetching user data: " + e.getMessage());
+                    Toast.makeText(requireContext(), "Error fetching friends.", Toast.LENGTH_SHORT).show();
                 });
     }
+
+    private void fetchFriendDetails(List<String> friendIds) {
+        friendsList.clear(); // Clear the list to avoid duplication
+
+        for (String friendId : friendIds) {
+            db.collection("users")
+                    .document(friendId)
+                    .get()
+                    .addOnSuccessListener(friendDocument -> {
+                        if (friendDocument.exists()) {
+                            // Extract friend's username
+                            String friendUsername = friendDocument.getString("username");
+                            if (friendUsername == null || friendUsername.isEmpty()) {
+                                friendUsername = "Unknown Friend"; // Fallback if no username is found
+                            }
+
+                            // Log the friend's username
+                            Log.d("FriendListFragment", "Friend username: " + friendUsername);
+
+                            // Create a Friend object with the retrieved username and userId
+                            Friend friend = new Friend(friendUsername, friendId);
+                            friendsList.add(friend);
+
+                            // Notify the adapter after adding a new friend
+                            friendAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.w("FriendListFragment", "Friend document does not exist for ID: " + friendId);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("FriendListFragment", "Error fetching friend data: " + e.getMessage());
+                    });
+        }
+    }
+
 }
