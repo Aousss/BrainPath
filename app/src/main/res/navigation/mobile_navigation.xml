@@ -10,6 +10,7 @@
         android:id="@+id/navigation_assessment"
         android:name="com.example.brainpath.ui.assessment.AssessmentFragment"
         android:label="@string/title_assessment"
+        app:popUpToInclusive="false"
         tools:layout="@layout/activity_assessment_diagnostic" />
 
 
@@ -95,7 +96,6 @@
         android:id="@+id/navigation_progress_home"
         android:name="com.example.brainpath.ui.progress.ProgressTrackingFragment"
         android:label="Progress"
-        app:popUpToInclusive="false"
         tools:layout="@layout/activity_progress_and_tracking">
         <!-- Action to navigate to progress -->
         <action
