@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:id="@+id/progressTracking_container"
     android:layout_marginBottom="60dp">
 
     <!--  BUTTONS CONTENTS -->
@@ -180,7 +181,7 @@
                 android:progressDrawable="@drawable/progress_bar_display"/>
 
             <TextView
-                android:id="@+id/prgressPercentageDisplay"
+                android:id="@+id/progressPercentageDisplay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="30%"

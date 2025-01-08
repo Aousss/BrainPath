@@ -3,6 +3,7 @@
     <string name="title_assessment">Assessment</string>
     <string name="title_interaction">Interaction</string>
     <string name="title_resources">Resources</string>
+    <string name="title_progress">Progress</string>
     <string name="title_profile">Profile</string>
     <string name="default_notification_channel_id">default_channel</string>
     <string name="uploading_image_progress">Uploading image: %1$d%%</string>

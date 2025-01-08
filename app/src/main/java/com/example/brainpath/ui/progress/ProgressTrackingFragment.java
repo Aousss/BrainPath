@@ -13,12 +13,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.brainpath.R;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 
 public class ProgressTrackingFragment extends Fragment {
 
@@ -26,6 +31,9 @@ public class ProgressTrackingFragment extends Fragment {
     private TextView motivationQuote, progressPercentageDisplay, progressBarMessage;
     private FirebaseFirestore db;
     private DocumentReference progressRef;
+
+    private ProgressTrackingViewModel progressViewModel;
+    private SubjectAdapter subjectAdapter;
 
     @Nullable
     @Override
@@ -37,6 +45,12 @@ public class ProgressTrackingFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         progressRef = db.collection("course").document("subject");
 
+        progressViewModel = new ViewModelProvider(requireActivity()).get(ProgressTrackingViewModel.class);
+
+        progressViewModel.getSubjectsList().observe(getViewLifecycleOwner(), subjects -> {
+            // Update UI based on the shared data
+        });
+
         // Bind views
         motivationQuote = rootView.findViewById(R.id.motivationQuote);
         progressBar = rootView.findViewById(R.id.progressBar);
@@ -47,6 +61,12 @@ public class ProgressTrackingFragment extends Fragment {
         LinearLayout buttonProgressBar = rootView.findViewById(R.id.buttonProgressBar);
         buttonProgressBar.setOnClickListener(v -> navigateToYourProgress());
 
+        LinearLayout buttonLearningGoals = rootView.findViewById(R.id.buttonLearningGoals);
+        buttonLearningGoals.setOnClickListener(v -> navigateToLearningGoals());
+
+        LinearLayout buttonReminder = rootView.findViewById(R.id.buttonReminder);
+        buttonReminder.setOnClickListener(v -> navigateToReminder());
+
         // Fetch progress data
         fetchProgressData();
 
@@ -54,16 +74,18 @@ public class ProgressTrackingFragment extends Fragment {
     }
 
     private void navigateToYourProgress() {
-        ProgressCoursesFragment progressCoursesFragment = new ProgressCoursesFragment();
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+        navController.navigate(R.id.action_progressTrackingFragment_to_progressFragment);
+    }
 
-        // Use FragmentManager to replace the current fragment
-        if (getActivity() != null) {
-            getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.progressTracking_container, progressCoursesFragment) // Replace with your container ID
-                    .addToBackStack(null) // Add the transaction to the back stack to allow back navigation
-                    .commit();
-        }
+    private void navigateToLearningGoals() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+        navController.navigate(R.id.action_progressTrackingFragment_to_learningFragment);
+    }
+
+    private void navigateToReminder() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+        navController.navigate(R.id.action_progressTrackingFragment_to_reminderFragment);
     }
 
     private void fetchProgressData() {

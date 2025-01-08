@@ -7,7 +7,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.brainpath.ui.home.HomeFragment;
+import com.example.brainpath.ui.assessment.AssessmentFragment;
 import com.example.brainpath.ui.profile.SignInActivity;
 
 public class LandingActivity extends AppCompatActivity {
@@ -31,7 +31,7 @@ public class LandingActivity extends AppCompatActivity {
 
         if (isLoggedIn) {
             // This will directly to the home page
-            Intent assessmentIntent = new Intent(this, HomeFragment.class);
+            Intent assessmentIntent = new Intent(this, AssessmentFragment.class);
             startActivity(assessmentIntent);
             finish(); // close the LandingActivity
             return;
