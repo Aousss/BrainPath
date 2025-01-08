@@ -58,14 +58,6 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.View
             holder.imageView.setVisibility(View.GONE); // Hide if no image URL
         }
 
-        // Handle file URL preview
-        if (post.getFileUrl() != null && !post.getFileUrl().isEmpty()) {
-            holder.filePreviewText.setVisibility(View.VISIBLE);
-            holder.filePreviewText.setText("File attached: " + post.getFileUrl());
-        } else {
-            holder.filePreviewText.setVisibility(View.GONE);
-        }
-
         holder.itemView.setOnClickListener(v -> {
             // Handle item click if needed (open full post details, etc.)
             Toast.makeText(context, "Post clicked: " + post.getTitle(), Toast.LENGTH_SHORT).show();
@@ -100,7 +92,6 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.View
             titleText = itemView.findViewById(R.id.titleText);
             descriptionText = itemView.findViewById(R.id.descriptionText);
             timestampText = itemView.findViewById(R.id.timestampText);
-            filePreviewText = itemView.findViewById(R.id.filePreviewText);
             imageView = itemView.findViewById(R.id.imageView);
         }
     }

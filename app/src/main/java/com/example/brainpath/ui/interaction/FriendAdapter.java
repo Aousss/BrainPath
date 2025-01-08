@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +25,11 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
         this.context = context;
         this.friendsList = friendsList;
         this.onItemClickListener = listener;
+
+        // Show a toast message if there are no friends
+        if (friendsList.isEmpty()) {
+            Toast.makeText(context, "No friends found.  ", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -35,6 +41,12 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
     @Override
     public void onBindViewHolder(FriendViewHolder holder, int position) {
+        // Check if the list is empty before trying to access an item
+        if (friendsList.isEmpty()) {
+            // Do nothing or log if needed
+            return;
+        }
+
         Friend friend = friendsList.get(position);
 
         // Fetch username (change from 'name' to 'username')

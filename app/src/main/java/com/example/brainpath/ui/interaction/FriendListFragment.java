@@ -5,15 +5,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.brainpath.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -42,10 +47,7 @@ public class FriendListFragment extends Fragment {
 
         // Pass the OnItemClickListener to the adapter
         friendAdapter = new FriendAdapter(requireContext(), friendsList, friend -> {
-            // Handle item click
-            Log.d("FriendListFragment", "Friend clicked: " + friend.getUserId()); // Log the chatId
-
-            // Implement navigation to the chat screen (use NavController or callback to activity)
+            // Handle friend item click
             Toast.makeText(requireContext(), "Clicked on: " + friend.getUsername(), Toast.LENGTH_SHORT).show();
         });
 
@@ -54,6 +56,21 @@ public class FriendListFragment extends Fragment {
 
         // Fetch friends for the current logged-in user
         fetchFriends();
+
+
+        // Add this code for navigation to InteractionAddFragment
+        ImageButton addButton = view.findViewById(R.id.addInteractionButton);
+        addButton.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+            navController.navigate(R.id.action_friendListFragment_to_interactionAddFragment);
+        });
+
+        // Setup FloatingActionButton
+        FloatingActionButton gotoForumButton = view.findViewById(R.id.gotoForum);
+        gotoForumButton.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+            navController.navigate(R.id.action_friendListFragment_to_forumFragment);
+        });
 
         return view;
     }
@@ -94,7 +111,9 @@ public class FriendListFragment extends Fragment {
                                     });
                         }
                     } else {
-                        Toast.makeText(requireContext(), "No friends found.", Toast.LENGTH_SHORT).show();
+                        // Set the adapter to show the empty state
+                        friendsList.clear();
+                        friendAdapter.notifyDataSetChanged();
                     }
                 })
                 .addOnFailureListener(e -> {

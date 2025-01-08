@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="10dp"
     android:layout_marginTop="10dp"
     app:cardCornerRadius="10dp"
     app:cardElevation="4dp">
@@ -14,42 +13,15 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Username Text -->
-        <TextView
-            android:id="@+id/usernameText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
-
         <!-- Title Text -->
         <TextView
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Post Title"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"/>
-
-        <!-- Description Text -->
-        <TextView
-            android:id="@+id/descriptionText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Post description here"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"/>
-
-        <!-- Timestamp Text -->
-        <TextView
-            android:id="@+id/timestampText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Timestamp"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"/>
+            android:textColor="@color/dark_grey"
+            android:textStyle="bold"
+            android:textSize="18sp" />
 
         <!-- ImageView for Image URL -->
         <ImageView
@@ -58,16 +30,39 @@
             android:layout_height="200dp"
             android:layout_marginTop="8dp"
             android:scaleType="centerCrop"
-            android:visibility="gone"/>
+            android:visibility="visible" />
 
-        <!-- File Preview Text -->
+        <!-- Description Text -->
         <TextView
-            android:id="@+id/filePreviewText"
+            android:id="@+id/descriptionText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="File attached: [file_url]"
-            android:textColor="@android:color/black"
-            android:visibility="gone"/>
+            android:text="Post description here"
+            android:textColor="@color/dark_grey"
+            android:textSize="16sp" />
+
+        <!-- Username Text -->
+        <TextView
+            android:id="@+id/usernameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Username"
+            android:textColor="@color/light_grey"
+            android:textSize="12sp"
+            android:textStyle="bold|italic" />
+
+        <!-- Timestamp Text -->
+        <TextView
+            android:id="@+id/timestampText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Timestamp"
+            android:textColor="@color/light_grey"
+            android:textStyle="italic"
+            android:textSize="12sp" />
+
+
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

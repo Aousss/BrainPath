@@ -17,15 +17,54 @@
         android:id="@+id/navigation_interaction"
         android:name="com.example.brainpath.ui.interaction.FriendListFragment"
         android:label="@string/title_interaction"
-        tools:layout="@layout/fragment_dashboard">
+        tools:layout="@layout/activity_interaction_friend">
+
+        <!-- Action to navigate to interactionAddFragment -->
+        <action
+            android:id="@+id/action_friendListFragment_to_interactionAddFragment"
+            app:destination="@id/navigation_addFragment"/>
+
+        <!-- Action to navigate to forumFragment -->
+        <action
+            android:id="@+id/action_friendListFragment_to_forumFragment"
+            app:destination="@id/navigation_forum"/>
+
+        <!-- Action to navigate to forumFragment -->
+        <action
+            android:id="@+id/action_friendListFragment_to_chatFragment"
+            app:destination="@id/navigation_chat"/>
+
     </fragment>
 
     <fragment
         android:id="@+id/navigation_addFragment"
         android:name="com.example.brainpath.ui.interaction.InteractionAddFragment"
-        android:label="addFragment"
-        tools:layout="@layout/fragment_dashboard">
+        android:label="Add"
+        tools:layout="@layout/activity_interaction_add">
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_chat"
+        android:name="com.example.brainpath.ui.interaction.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/activity_interaction_chat"/>
+
+    <fragment
+        android:id="@+id/navigation_forum"
+        android:name="com.example.brainpath.ui.interaction.ForumFragment"
+        android:label="Forum"
+        tools:layout="@layout/activity_interaction_forum">
+        <!-- Action to navigate to forumFragment -->
+        <action
+            android:id="@+id/action_forumFragment_to_postForumFragment"
+            app:destination="@id/navigation_forumPost"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_forumPost"
+        android:name="com.example.brainpath.ui.interaction.PostForumFragment"
+        tools:layout="@layout/activity_interaction_forum_post"/>
 
     <!--  RESOURCES NAVIGATION  -->
     <fragment
@@ -36,8 +75,7 @@
         <!-- Action to navigate to DetailsFragment -->
         <action
             android:id="@+id/action_resourcesFragment_to_detailsFragment"
-            app:destination="@+id/navigation_details" />
-
+            app:destination="@id/navigation_details" />
     </fragment>
 
     <fragment
@@ -51,5 +89,5 @@
         android:id="@+id/navigation_profile"
         android:name="com.example.brainpath.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/activity_profile" />
 </navigation>

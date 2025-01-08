@@ -21,7 +21,6 @@ public class ForumPost {
         this.description = description;
         this.timestamp = timestamp;
         this.imageUrl = imageUrl;
-        this.fileUrl = fileUrl;
         this.fileDocId = fileDocId;
     }
 
@@ -44,10 +43,6 @@ public class ForumPost {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public String getFileUrl() {
-        return fileUrl;
     }
 
     public String getFileDocId() {
@@ -73,10 +68,6 @@ public class ForumPost {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
     }
 
     public void setFileDocId(String fileDocId) {
