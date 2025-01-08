@@ -47,7 +47,24 @@ public class FriendListFragment extends Fragment {
         // Initialize the adapter with the friends list (List<Friend>)
         friendAdapter = new FriendAdapter(requireContext(), friendsList, friend -> {
             // Handle friend item click
-            Toast.makeText(requireContext(), "Clicked on: " + friend.getUsername(), Toast.LENGTH_SHORT).show();
+            String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            String friendId = friend.getUserId();
+
+            // Create a chatId by combining the current user's ID and friend's ID (order doesn't matter)
+            String chatId = currentUserId.compareTo(friendId) < 0 ?
+                    currentUserId + "_" + friendId :
+                    friendId + "_" + currentUserId;
+
+            // Log the chatId for debugging
+            Log.d("FriendListFragment", "Generated chatId: " + chatId);
+
+            // Create a Bundle to pass the chatId to the ChatFragment
+            Bundle bundle = new Bundle();
+            bundle.putString("chatId", chatId);
+
+            // Navigate to ChatFragment with the chatId
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+            navController.navigate(R.id.action_friendListFragment_to_chatFragment, bundle);
         });
 
         recyclerView.setAdapter(friendAdapter);
@@ -136,5 +153,5 @@ public class FriendListFragment extends Fragment {
                     });
         }
     }
-
 }
+
