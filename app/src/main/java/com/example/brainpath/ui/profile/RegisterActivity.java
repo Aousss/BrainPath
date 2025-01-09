@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.brainpath.MainActivity;
@@ -47,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up); // Ensure this matches your XML layout file name
+        setContentView(R.layout.activity_sign_up);
 
         // Initialize Firebase Authentication and Firestore
         mAuth = FirebaseAuth.getInstance();
@@ -66,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
         // UI Components
-        EditText usernameField = findViewById(R.id.usernameField); // Assuming you added this field in XML
+        EditText usernameField = findViewById(R.id.usernameField);
         EditText emailField = findViewById(R.id.emailField);
         EditText passwordField = findViewById(R.id.passwordField);
         EditText confirmPasswordField = findViewById(R.id.conformPasswordField);
@@ -74,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
         TextView showConfirmPassword = findViewById(R.id.showConfirmPassword);
         Button registerButton = findViewById(R.id.registerBtn);
         Button googleSignInButton = findViewById(R.id.googleSignInButton);
-        TextView signInNow = findViewById(R.id.signinNow); // Link to SignInActivity
+        TextView signInNow = findViewById(R.id.signinNow);
 
         // Toggle Password Visibility
         showPassword.setOnClickListener(v -> togglePasswordVisibility(passwordField, showPassword));
@@ -94,7 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (password.length() < 6) {
                 Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
             } else {
-                registerUser(username, email, password);
+                checkUsernameUniquenessAndRegister(username, email, password);
             }
         });
 
@@ -109,15 +110,13 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    // Method to toggle password visibility
+    // Toggle Password Visibility
     private void togglePasswordVisibility(EditText passwordField, TextView toggleButton) {
         if (passwordField.getTransformationMethod() == null) {
-            // Hide password
             passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             passwordField.setTransformationMethod(PasswordTransformationMethod.getInstance());
             toggleButton.setText("Show");
         } else {
-            // Show password
             passwordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
             passwordField.setTransformationMethod(null);
             toggleButton.setText("Hide");
@@ -125,41 +124,42 @@ public class RegisterActivity extends AppCompatActivity {
         passwordField.setSelection(passwordField.length());
     }
 
-    // Method to register the user with Firebase Authentication
+    // Check Username Uniqueness Before Registration
+    private void checkUsernameUniquenessAndRegister(String username, String email, String password) {
+        db.collection("users")
+                .whereEqualTo("username", username)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot.isEmpty()) {
+                        registerUser(username, email, password);
+                    } else {
+                        Toast.makeText(this, "Username is already taken. Please choose another one.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Error checking username: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
     private void registerUser(String username, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Registration successful
                         FirebaseUser user = mAuth.getCurrentUser();
-
                         if (user != null) {
-                            // Create the user data to store in Firestore
                             Map<String, Object> userData = new HashMap<>();
-                            userData.put("username", username);  // Store username
-                            userData.put("email", email);        // Store email
-                            userData.put("friendIds", new ArrayList<>());  // Initialize friendIds as an empty array
+                            userData.put("username", username);
+                            userData.put("email", email);
+                            userData.put("friendIds", new ArrayList<>());
 
-                            // Store user data in Firestore under "users" collection
                             db.collection("users").document(user.getUid())
                                     .set(userData)
                                     .addOnSuccessListener(aVoid -> {
-                                        // Registration in Firestore successful
-                                        Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
-
-                                        // Redirect to SignInActivity
-                                        Intent intent = new Intent(RegisterActivity.this, SignInActivity.class);
-                                        startActivity(intent);
-                                        finish();
+                                        Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show();
+                                        navigateToMainActivity();
                                     })
-                                    .addOnFailureListener(e -> {
-                                        // Handle error
-                                        Toast.makeText(RegisterActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    });
+                                    .addOnFailureListener(e -> Toast.makeText(this, "Error saving data: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                         }
                     } else {
-                        // Registration failed
-                        Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -193,15 +193,99 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(this, "Sign-In successful: " + (user != null ? user.getEmail() : ""), Toast.LENGTH_SHORT).show();
-
-                        // Redirect to MainActivity or any desired activity
-                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        if (user != null) {
+                            checkAndPromptForUsername(user);
+                        }
                     } else {
                         Toast.makeText(this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void checkAndPromptForUsername(FirebaseUser user) {
+        db.collection("users").document(user.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists() && documentSnapshot.contains("username")) {
+                        String username = documentSnapshot.getString("username");
+                        if (isDuplicateUsername(username, user.getUid())) {
+                            promptForUsername(user); // Prompt if duplicate
+                        } else {
+                            navigateToMainActivity();
+                        }
+                    } else {
+                        promptForUsername(user); // Prompt if no username
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Error checking username: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private boolean isDuplicateUsername(String username, String currentUid) {
+        // Simulated logic for duplication detection (implement server-side query if needed)
+        return false;
+    }
+
+    private void promptForUsername(FirebaseUser user) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Set Your Username");
+
+        EditText input = new EditText(this);
+        input.setHint("Enter username");
+        builder.setView(input);
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String username = input.getText().toString().trim();
+            if (!username.isEmpty()) {
+                checkUsernameUniquenessAndSave(user, username);
+            } else {
+                Toast.makeText(this, "Username cannot be empty.", Toast.LENGTH_SHORT).show();
+                promptForUsername(user);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            dialog.dismiss();
+            Toast.makeText(this, "Username is required.", Toast.LENGTH_SHORT).show();
+            promptForUsername(user);
+        });
+
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    private void checkUsernameUniquenessAndSave(FirebaseUser user, String username) {
+        db.collection("users")
+                .whereEqualTo("username", username)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot.isEmpty()) {
+                        saveUsernameToFirestore(user, username);
+                    } else {
+                        Toast.makeText(this, "Username is already taken. Please choose another one.", Toast.LENGTH_SHORT).show();
+                        promptForUsername(user);
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Error checking username: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void saveUsernameToFirestore(FirebaseUser user, String username) {
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("username", username);
+        userData.put("email", user.getEmail());
+        userData.put("friendIds", new ArrayList<>());
+
+        db.collection("users").document(user.getUid())
+                .set(userData)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Username saved successfully.", Toast.LENGTH_SHORT).show();
+                    navigateToMainActivity();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to save username: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void navigateToMainActivity() {
+        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
