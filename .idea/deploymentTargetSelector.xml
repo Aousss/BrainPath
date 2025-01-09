@@ -8,7 +8,7 @@
       <SelectionState runConfigName="InteractionAddActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="FriendListActivity">
+      <SelectionState runConfigName="LandingActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

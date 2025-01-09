@@ -17,9 +17,9 @@
         android:title="@string/title_resources" />
 
     <item
-        android:id="@+id/navigation_progress"
+        android:id="@+id/navigation_progress_home"
         android:icon="@drawable/ic_progress"
-        android:title="Progress"/>
+        android:title="@string/title_progress"/>
 
     <item
         android:id="@+id/navigation_profile"
