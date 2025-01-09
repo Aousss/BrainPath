@@ -22,6 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.brainpath.R;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 
 import java.util.ArrayList;
 
@@ -59,7 +62,7 @@ public class ProgressTrackingFragment extends Fragment {
 
         // Navigation
         LinearLayout buttonProgressBar = rootView.findViewById(R.id.buttonProgressBar);
-        buttonProgressBar.setOnClickListener(v -> navigateToYourProgress());
+        buttonProgressBar.setOnClickListener(v -> navigateToYourProgressList());
 
         LinearLayout buttonLearningGoals = rootView.findViewById(R.id.buttonLearningGoals);
         buttonLearningGoals.setOnClickListener(v -> navigateToLearningGoals());
@@ -75,7 +78,12 @@ public class ProgressTrackingFragment extends Fragment {
 
     private void navigateToYourProgress() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
-        navController.navigate(R.id.action_progressTrackingFragment_to_progressFragment);
+        navController.navigate(R.id.action_navigation_course_lists_to_navigation_progress_course);
+    }
+
+    private void navigateToYourProgressList() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+        navController.navigate(R.id.action_navigation_progress_home_to_navigation_course_lists);
     }
 
     private void navigateToLearningGoals() {
@@ -89,7 +97,21 @@ public class ProgressTrackingFragment extends Fragment {
     }
 
     private void fetchProgressData() {
-        progressRef.addSnapshotListener((snapshot, e) -> {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser == null) {
+            Log.e("ProgressTrackingFragment", "No user is currently logged in.");
+            Toast.makeText(requireContext(), "Please log in to view progress.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userId = currentUser.getUid();
+
+        // Reference to user's progress data
+        DocumentReference userProgressRef = db.collection("users").document(userId);
+
+        // Fetch user's progress data
+        userProgressRef.addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 Log.e("ProgressTrackingFragment", "Error fetching progress", e);
                 Toast.makeText(requireContext(), "Error fetching progress", Toast.LENGTH_SHORT).show();
@@ -104,19 +126,27 @@ public class ProgressTrackingFragment extends Fragment {
                 } else {
                     Log.e("ProgressTrackingFragment", "Progress percentage is missing.");
                 }
+            } else {
+                Log.e("ProgressTrackingFragment", "No progress data found.");
+            }
+        });
 
-                // Get user name
-                String userName = snapshot.getString("name");
+        // Fetch user's name
+        db.collection("users").document(userId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                String userName = task.getResult().getString("username");
                 if (userName != null) {
                     updateMotivationQuote(userName);
                 } else {
                     Log.e("ProgressTrackingFragment", "User name is missing.");
                 }
             } else {
-                Log.e("ProgressTrackingFragment", "No progress data found.");
+                Log.e("ProgressTrackingFragment", "Error fetching user name", task.getException());
             }
         });
     }
+
+
 
     private void updateProgressUI(int progress) {
         progressBar.setProgress(progress);

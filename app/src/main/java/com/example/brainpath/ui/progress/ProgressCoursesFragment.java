@@ -61,9 +61,17 @@ public class ProgressCoursesFragment extends Fragment {
         improvementTopicsContainer = rootView.findViewById(R.id.improvementTopicsContainer);
 
         // Retrieve data passed via arguments
-        if (getArguments() != null) {
-            courseName = getArguments().getString("courseName");
-            courseProgress = getArguments().getInt("courseProgress", 0);
+        Bundle args = getArguments();
+        if (args != null) {
+            courseName = args.getString("subjectTitle");
+            courseProgress = args.getInt("progress");
+        }
+        String document = "subject";
+        if(courseName.equalsIgnoreCase("Science")){
+            document="subject2";
+        }
+        if(courseName.equalsIgnoreCase("English")){
+            document="subject3";
         }
 
         // Set course title and progress
@@ -72,15 +80,15 @@ public class ProgressCoursesFragment extends Fragment {
         courseProgressBar.setProgress(courseProgress);
 
         // Fetch quiz performance and improvement topics
-        fetchQuizPerformance();
-        fetchImprovementTopics();
+        fetchQuizPerformance(document);
+        fetchImprovementTopics(document);
 
         return rootView;
     }
 
-    private void fetchQuizPerformance() {
+    private void fetchQuizPerformance(String documents) {
         db.collection("course")
-                .document("subject")
+                .document(documents)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -107,9 +115,9 @@ public class ProgressCoursesFragment extends Fragment {
                 });
     }
 
-    private void fetchImprovementTopics() {
+    private void fetchImprovementTopics(String documents) {
         db.collection("course")
-                .document("subject")
+                .document(documents)
                 .collection("improvement_topic")
                 .get()
                 .addOnCompleteListener(task -> {
