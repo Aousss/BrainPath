@@ -92,9 +92,10 @@
 
     <!--  PROGRESS AND TRACKING NAVIGATION  -->
     <fragment
-        android:id="@+id/navigation_progress_tracking"
+        android:id="@+id/navigation_progress_home"
         android:name="com.example.brainpath.ui.progress.ProgressTrackingFragment"
-        android:label="Progress &amp; Tracking"
+        android:label="Progress"
+        app:popUpToInclusive="false"
         tools:layout="@layout/activity_progress_and_tracking">
         <!-- Action to navigate to progress -->
         <action
@@ -137,11 +138,24 @@
         tools:layout="@layout/activity_progress_reminder"/>
 
 
+
+
     <!--  PROFILE NAVIGATION  -->
     <fragment
         android:id="@+id/navigation_profile"
-        android:label="Profile"
         android:name="com.example.brainpath.ui.profile.ProfileFragment"
-        tools:layout="@layout/activity_profile"/>
+        android:label="@string/title_profile"
+        tools:layout="@layout/activity_profile">
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_settings"
+            app:destination="@id/navigation_settings" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.brainpath.ui.profile.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
+
 
 </navigation>

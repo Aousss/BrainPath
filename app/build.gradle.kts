@@ -70,11 +70,13 @@ dependencies {
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.3.0")
 
-    implementation ("com.github.bumptech.glide:glide:4.15.1")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1") // Optional, for custom Glide modules
-
+    // Glide for image loading
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1") // Optional, for custom Glide modules
 
     // Google Play Services Base
-    implementation ("com.google.android.gms:play-services-base:18.2.0")
-}
+    implementation("com.google.android.gms:play-services-base:18.2.0")
 
+    // Logging and utilities
+    implementation("androidx.core:core-ktx:1.10.1") // For logging and extensions
+}
