@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginBottom="60dp">
+    android:layout_marginBottom="80dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginHorizontal="20dp"
+    android:backgroundTint="@color/light_white"
+    app:cardCornerRadius="20dp">
 
-    <androidx.cardview.widget.CardView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:backgroundTint="@color/light_white"
-        app:cardCornerRadius="20dp">
+        android:layout_height="match_parent"
+        android:layout_marginVertical="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginVertical="20dp">
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="60dp">
 
-            <TextView android:text="Registered Course"
+            <TextView
+                android:text="Registered Course"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
@@ -33,7 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"/>
 
-            <TextView android:text="Upcoming Assessment"
+            <TextView
+                android:text="Upcoming Assessment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
@@ -47,7 +53,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"/>
 
-            <TextView android:text="Calendar"
+            <TextView
+                android:text="Calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
@@ -85,7 +92,8 @@
                     android:orientation="vertical"
                     android:layout_margin="10dp">
 
-                    <TextView android:text="Assessment Result"
+                    <TextView
+                        android:text="Assessment Result"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
@@ -120,7 +128,8 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="25dp"
                 app:cardCornerRadius="10dp"
                 android:background="@color/light_blue"
                 android:layout_gravity="center_horizontal">
@@ -131,7 +140,8 @@
                     android:orientation="vertical"
                     android:layout_margin="10dp">
 
-                    <TextView android:text="Personalized Study Plan"
+                    <TextView
+                        android:text="Personalized Study Plan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
@@ -165,7 +175,6 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </ScrollView>
 
-
-</ScrollView>
+</androidx.cardview.widget.CardView>

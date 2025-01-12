@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide;
 import com.example.brainpath.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileFragment extends Fragment {
@@ -28,7 +27,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseUser currentUser;
     private FirebaseFirestore firebaseFirestore;
 
-    private TextView nameTextView, emailTextView;
+    private TextView usernameTextView, nameTextView;
     private ImageView profileImageView;
 
     @Nullable
@@ -43,21 +42,22 @@ public class ProfileFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         // Initialize UI components
-        nameTextView = view.findViewById(R.id.textView);
-        emailTextView = view.findViewById(R.id.textView2);
-        profileImageView = view.findViewById(R.id.imageView2);
+        usernameTextView = view.findViewById(R.id.username);
+        nameTextView = view.findViewById(R.id.name);
+        profileImageView = view.findViewById(R.id.profile_image);
 
-        // Set user information
-        if (currentUser != null) {
-            nameTextView.setText(currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "Name");
-            emailTextView.setText(currentUser.getEmail());
-            fetchProfileImage();
-        }
+        // Fetch and display user data
+        fetchUserData();
 
         // Navigate to SettingsFragment
         view.findViewById(R.id.button).setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
             navController.navigate(R.id.action_navigation_profile_to_navigation_settings);
+        });
+
+        view.findViewById(R.id.button3).setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+            navController.navigate(R.id.action_navigation_profile_to_navigation_changePassword);
         });
 
         // Handle Logout
@@ -71,36 +71,44 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void fetchProfileImage() {
-        if (currentUser == null) return;
+    private void fetchUserData() {
+        if (currentUser == null) {
+            Toast.makeText(getContext(), "User is not authenticated", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         String userId = currentUser.getUid();
 
-        // Retrieve the profile image URL from Firestore
+        // Retrieve user data from Firestore
         firebaseFirestore.collection("users")
                 .document(userId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String profileImageUrl = documentSnapshot.getString("profileImageUrl");
+                        String username = documentSnapshot.getString("username");
+                        String name = documentSnapshot.getString("name");
+
+                        // Display profile image
                         if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                            // Load the image using Glide
                             Glide.with(requireContext())
                                     .load(profileImageUrl)
                                     .placeholder(R.drawable.profile) // Default placeholder
+                                    .circleCrop() // Ensures the round shape
                                     .into(profileImageView);
                         } else {
-                            // If no image URL, load the default image
                             profileImageView.setImageResource(R.drawable.profile);
                         }
+
+                        // Display username and name
+                        usernameTextView.setText(username != null ? username : "No Username");
+                        nameTextView.setText(name != null ? name : " ");
                     } else {
-                        // No user document exists, load default image
-                        profileImageView.setImageResource(R.drawable.profile);
+                        Toast.makeText(getContext(), "User data does not exist", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Failed to fetch profile image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    profileImageView.setImageResource(R.drawable.profile);
+                    Toast.makeText(getContext(), "Failed to fetch user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 }
