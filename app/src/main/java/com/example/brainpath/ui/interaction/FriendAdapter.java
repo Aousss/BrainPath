@@ -75,8 +75,9 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     }
 
     public void updateFriendsList(List<Friend> newFriendsList) {
-        this.friendsList = new ArrayList<>(newFriendsList); // Replace with the new list
-        notifyDataSetChanged(); // Notify the adapter to refresh the UI
+        this.friendsList = new ArrayList<>(newFriendsList);  // Replace with the new list
+        notifyDataSetChanged();  // Notify the adapter to refresh the UI
     }
+
 
 }

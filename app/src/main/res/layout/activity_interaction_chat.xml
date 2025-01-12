@@ -11,24 +11,56 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:layout_marginHorizontal="20dp"
         android:background="@color/light_white"
         app:cardCornerRadius="20dp">
-        <!-- for the design of the each message send and receive in
-                -->
 
-        <!-- RECYCLER VIEW FOR CHAT MESSAGE -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/chatRecyclerView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="70dp"
-            android:layout_marginHorizontal="15dp"
-            android:padding="8dp"
-            android:scrollbars="vertical" />
+            android:orientation="vertical">
+
+            <!-- Profile Header (Profile Picture and Username) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <!-- Profile Picture -->
+                <ImageView
+                    android:id="@+id/profilePic"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/profile_placeholder" />
+
+                <!-- Username -->
+                <TextView
+                    android:id="@+id/usernamePic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Friend's Name"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+            <!-- RECYCLER VIEW FOR CHAT MESSAGE -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chatRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="70dp"
+                android:layout_marginHorizontal="15dp"
+                android:padding="8dp"
+                android:scrollbars="vertical" />
+
+        </LinearLayout>
 
         <!-- MESSAGE INPUT AND SEND BUTTON -->
         <LinearLayout
@@ -61,8 +93,6 @@
                 android:scaleType="centerInside"
                 android:contentDescription="Send Message" />
         </LinearLayout>
-
-
 
     </androidx.cardview.widget.CardView>
 
