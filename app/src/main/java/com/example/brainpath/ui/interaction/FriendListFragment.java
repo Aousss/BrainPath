@@ -172,7 +172,7 @@ public class FriendListFragment extends Fragment {
                                 .addOnSuccessListener(friendDocument -> {
                                     if (friendDocument.exists()) {
                                         String username = friendDocument.getString("username");
-                                        String profile = friendDocument.getString("profileImageURL");
+                                        String profile = friendDocument.getString("profileImageUrl");
 
                                         Friend friend = new Friend(
                                                 username != null ? username : "Unknown Friend",
