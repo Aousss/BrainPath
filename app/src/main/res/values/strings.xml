@@ -3,7 +3,7 @@
     <string name="title_assessment">Assessment</string>
     <string name="title_interaction">Interaction</string>
     <string name="title_resources">Resources</string>
-    <string name="title_progress">Progress</string>
+    <string name="title_progress_tracking">Progress and Tracking</string>
     <string name="title_profile">Profile</string>
     <string name="default_notification_channel_id">default_channel</string>
     <string name="uploading_image_progress">Uploading image: %1$d%%</string>
@@ -11,5 +11,21 @@
     <string name="uploading_file_progress">Uploading file: %1$d%%</string>
     <string name="selected_file">Selected file: %1$s</string>
     <string name="selected_image">Selected image: %1$s</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="name_default">User</string>
+    <string name="email_default">User@gmail.com</string>
+    <string name="setting">Setting</string>
+    <string name="assessment_result">Assessment Result</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="notification">Notification</string>
+    <string name="personalize_study">Personalize Study</string>
+    <string name="select_image">Select Profile Image</string>
+    <string name="uploading_image">Uploading image</string>
+
+
+
+    <string name="logout">LOG OUT</string>
+
 
 </resources>

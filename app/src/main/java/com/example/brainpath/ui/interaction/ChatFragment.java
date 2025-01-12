@@ -98,35 +98,44 @@ public class ChatFragment extends Fragment {
                         return;
                     }
 
-                    chatMessages.clear(); // Clear the list before adding new messages
-                    for (DocumentSnapshot doc : snapshot) {
-                        ChatMessage message = doc.toObject(ChatMessage.class);
-                        chatMessages.add(message);
+                    if (snapshot != null && !snapshot.isEmpty()) {
+                        chatMessages.clear(); // Clear existing messages
+                        for (DocumentSnapshot doc : snapshot) {
+                            ChatMessage message = doc.toObject(ChatMessage.class);
+                            chatMessages.add(message);
+                        }
+                        chatAdapter.setMessages(chatMessages);
+                    } else {
+                        // Handle empty chat gracefully
+                        Toast.makeText(requireContext(), "No messages yet. Start the conversation!", Toast.LENGTH_SHORT).show();
+                        chatMessages.clear();
+                        chatAdapter.setMessages(chatMessages);
                     }
-                    chatAdapter.setMessages(chatMessages);
                 });
     }
 
+
     private void sendMessage(String messageText) {
-        // Get the current user's ID
+        sendButton.setEnabled(false); // Disable send button
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Create a new message object
         Map<String, Object> messageData = new HashMap<>();
         messageData.put("senderId", currentUserId);
         messageData.put("message", messageText);
         messageData.put("timestamp", Timestamp.now());
 
-        // Add the message to the Firestore collection
         db.collection("chats")
                 .document(chatId)
                 .collection("messages")
                 .add(messageData)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(requireContext(), "Message sent!", Toast.LENGTH_SHORT).show();
+                    sendButton.setEnabled(true); // Re-enable send button
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    sendButton.setEnabled(true); // Re-enable send button
                 });
     }
+
 }

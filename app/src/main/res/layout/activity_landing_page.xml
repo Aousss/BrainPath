@@ -9,24 +9,6 @@
     android:background="@color/blue"
     tools:context=".LandingActivity">
 
-    <TextView
-        android:id="@+id/welcometext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome to"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="50dp"
-        android:paddingRight="50dp"
-        android:paddingLeft="50dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:background="@drawable/white_rectangle_rounded_edges"
-        android:textColor="@color/blue"/>
-
     <ImageView
         android:id="@+id/appLogo"
         android:layout_width="150dp"

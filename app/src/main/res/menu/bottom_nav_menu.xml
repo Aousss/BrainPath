@@ -19,7 +19,7 @@
     <item
         android:id="@+id/navigation_progress_home"
         android:icon="@drawable/ic_progress"
-        android:title="@string/title_progress"/>
+        android:title="@string/title_progress_tracking"/>
 
     <item
         android:id="@+id/navigation_profile"
