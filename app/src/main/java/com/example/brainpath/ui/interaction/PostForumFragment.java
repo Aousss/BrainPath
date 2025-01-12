@@ -39,6 +39,7 @@ import java.util.TimeZone;
 
 public class PostForumFragment extends Fragment {
 
+    private static final String TAG = "PostForumFragment";
     private EditText forumTitle, forumDesc;
     private FirebaseFirestore firestore;
     private FirebaseAuth mAuth;
@@ -89,49 +90,12 @@ public class PostForumFragment extends Fragment {
         attachmentButton.setOnClickListener(v -> openFilePicker());
         photoButton.setOnClickListener(v -> openImageGallery());
 
-        // Check permissions
-        checkAndRequestPermissions();
-
-        // Set an OnClickListener to handle the button's click
         cancelButton.setOnClickListener(v -> {
-            // Example action: Navigate back to the previous fragment
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
-            navController.navigateUp(); // Navigates back
+            navController.navigateUp();
         });
 
         return view;
-    }
-
-    private void checkAndRequestPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1001);
-            } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P &&
-                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1001);
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == 1001) {
-            boolean allGranted = true;
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    allGranted = false;
-                    break;
-                }
-            }
-
-            if (allGranted) {
-                Toast.makeText(requireContext(), "All permissions granted", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(requireContext(), "Some permissions were denied", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     private void addPost() {
@@ -175,46 +139,102 @@ public class PostForumFragment extends Fragment {
                         Toast.makeText(requireContext(), "User not found. Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .addOnFailureListener(e -> Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching user details: " + e.getMessage());
+                    Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
-
     private void uploadImageAndCreatePost(HashMap<String, Object> post) {
         StorageReference fileReference = storageRef.child("forum/images/" + System.currentTimeMillis() + ".jpg");
 
         fileReference.putFile(selectedImageUri)
                 .addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl()
                         .addOnSuccessListener(uri -> {
-                            post.put("imageUrl", uri.toString());
-                            createPostInFirestore(post);
+                            // Save file metadata to "forumFiles"
+                            HashMap<String, Object> fileMetadata = new HashMap<>();
+                            fileMetadata.put("type", "image");
+                            fileMetadata.put("fileName", fileReference.getName());
+                            fileMetadata.put("fileUrl", uri.toString());
+
+                            firestore.collection("forumFiles").add(fileMetadata)
+                                    .addOnSuccessListener(documentReference -> {
+                                        String fileDocId = documentReference.getId();
+                                        Log.d(TAG, "Image metadata saved with ID: " + fileDocId);
+
+                                        // Add fileDocId to the post and save to "forumPosts"
+                                        post.put("fileDocId", fileDocId);
+                                        createPostInFirestore(post);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Failed to save image metadata: " + e.getMessage());
+                                        Toast.makeText(requireContext(), "Failed to save image metadata", Toast.LENGTH_SHORT).show();
+                                    });
                         })
-                        .addOnFailureListener(e -> attachmentPreview.setText(getString(R.string.upload_failed))))
-                .addOnFailureListener(e -> attachmentPreview.setText(getString(R.string.upload_failed)));
+                        .addOnFailureListener(e -> {
+                            Log.e(TAG, "Error getting image URL: " + e.getMessage());
+                            Toast.makeText(requireContext(), "Image upload failed", Toast.LENGTH_SHORT).show();
+                        }))
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error uploading image: " + e.getMessage());
+                    Toast.makeText(requireContext(), "Image upload failed", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void uploadFileAndCreatePost(HashMap<String, Object> post) {
         String fileExtension = getFileExtension(selectedFileUri);
         String storagePath = fileExtension.equals(".pdf") ? "forum/pdf_files/" : "forum/other_files/";
-
         StorageReference fileReference = storageRef.child(storagePath + System.currentTimeMillis() + fileExtension);
 
         fileReference.putFile(selectedFileUri)
                 .addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl()
                         .addOnSuccessListener(uri -> {
-                            post.put("fileUrl", uri.toString());
-                            createPostInFirestore(post);
+                            // Save file metadata to "forumFiles"
+                            HashMap<String, Object> fileMetadata = new HashMap<>();
+                            fileMetadata.put("type", "file");
+                            fileMetadata.put("fileName", fileReference.getName());
+                            fileMetadata.put("fileUrl", uri.toString());
+
+                            firestore.collection("forumFiles").add(fileMetadata)
+                                    .addOnSuccessListener(documentReference -> {
+                                        String fileDocId = documentReference.getId();
+                                        Log.d(TAG, "File metadata saved with ID: " + fileDocId);
+
+                                        // Add fileDocId to the post and save to "forumPosts"
+                                        post.put("fileDocId", fileDocId);
+                                        createPostInFirestore(post);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Failed to save file metadata: " + e.getMessage());
+                                        Toast.makeText(requireContext(), "Failed to save file metadata", Toast.LENGTH_SHORT).show();
+                                    });
                         })
-                        .addOnFailureListener(e -> attachmentPreview.setText(getString(R.string.upload_failed))))
-                .addOnFailureListener(e -> attachmentPreview.setText(getString(R.string.upload_failed)));
+                        .addOnFailureListener(e -> {
+                            Log.e(TAG, "Error getting file URL: " + e.getMessage());
+                            Toast.makeText(requireContext(), "File upload failed", Toast.LENGTH_SHORT).show();
+                        }))
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error uploading file: " + e.getMessage());
+                    Toast.makeText(requireContext(), "File upload failed", Toast.LENGTH_SHORT).show();
+                });
     }
+
+
 
     private void createPostInFirestore(HashMap<String, Object> post) {
         firestore.collection("forumPosts").add(post)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(requireContext(), "Post added successfully!", Toast.LENGTH_SHORT).show();
-                    requireActivity().getSupportFragmentManager().popBackStack();
+                    Log.d(TAG, "Post added with ID: " + documentReference.getId());
+
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+                    navController.navigateUp();
                 })
-                .addOnFailureListener(e -> Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error creating post: " + e.getMessage());
+                    Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
+
 
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -230,16 +250,16 @@ public class PostForumFragment extends Fragment {
     }
 
     private void handleFilePreview() {
-        String fileName = selectedFileUri.getLastPathSegment();
-        if (fileName != null) {
-            attachmentPreview.setText(getString(R.string.selected_file, fileName));
+        if (selectedFileUri != null) {
+            String fileName = selectedFileUri.getLastPathSegment();
+            attachmentPreview.setText(fileName != null ? "Selected file: " + fileName : "File selection error");
         }
     }
 
     private void handleImagePreview() {
-        String imageName = selectedImageUri.getLastPathSegment();
-        if (imageName != null) {
-            attachmentPreview.setText(getString(R.string.selected_image, imageName));
+        if (selectedImageUri != null) {
+            String imageName = selectedImageUri.getLastPathSegment();
+            attachmentPreview.setText(imageName != null ? "Selected image: " + imageName : "Image selection error");
         }
     }
 

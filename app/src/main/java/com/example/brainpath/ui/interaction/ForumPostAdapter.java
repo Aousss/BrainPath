@@ -1,19 +1,19 @@
 package com.example.brainpath.ui.interaction;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.brainpath.R;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -21,25 +21,38 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.View
 
     private Context context;
     private List<ForumPost> postList;
-    private FirebaseFirestore firestore;
 
     // Constructor
     public ForumPostAdapter(Context context, List<ForumPost> postList) {
         this.context = context;
         this.postList = postList;
-        firestore = FirebaseFirestore.getInstance();
     }
+
+    // ViewHolder class
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView usernameText, titleText, descriptionText, timestampText;
+        ImageView imageView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            usernameText = itemView.findViewById(R.id.usernameText);
+            titleText = itemView.findViewById(R.id.titleText);
+            descriptionText = itemView.findViewById(R.id.descriptionText);
+            timestampText = itemView.findViewById(R.id.timestampText);
+            imageView = itemView.findViewById(R.id.imageView);
+        }
+    }
+
 
     @NonNull
     @Override
-    public ForumPostAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the layout for individual forum post items
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_forum_post, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ForumPostAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ForumPost post = postList.get(position);
 
         holder.usernameText.setText(post.getUsername());
@@ -47,52 +60,62 @@ public class ForumPostAdapter extends RecyclerView.Adapter<ForumPostAdapter.View
         holder.descriptionText.setText(post.getDescription());
         holder.timestampText.setText(post.getTimestamp());
 
-        // Check if the image URL is available and load the image
-        if (post.getImageUrl() != null && !post.getImageUrl().isEmpty()) {
-            // Load image if URL is available
+        // Load image if URL is provided
+        if (!TextUtils.isEmpty(post.getImageUrl())) {
             Glide.with(context)
-                    .load(post.getImageUrl()) // Pass the URL stored in Firestore
+                    .load(post.getImageUrl())
                     .into(holder.imageView);
-            holder.imageView.setVisibility(View.VISIBLE); // Make sure the ImageView is visible
+            holder.imageView.setVisibility(View.VISIBLE);  // Show image view if URL exists
         } else {
-            holder.imageView.setVisibility(View.GONE); // Hide if no image URL
+            holder.imageView.setVisibility(View.GONE);  // Hide image view if no URL
         }
-
-        holder.itemView.setOnClickListener(v -> {
-            // Handle item click if needed (open full post details, etc.)
-            Toast.makeText(context, "Post clicked: " + post.getTitle(), Toast.LENGTH_SHORT).show();
-        });
     }
-
-    // Handle file URL preview (
 
     @Override
     public int getItemCount() {
-        // Return the size of the post list
         return postList.size();
     }
 
-    // Method to update the adapter data
+    // Update data using DiffUtil
     public void updateData(List<ForumPost> newPosts) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffCallback(postList, newPosts));
         postList.clear();
         postList.addAll(newPosts);
-        notifyDataSetChanged();
+        diffResult.dispatchUpdatesTo(this);
     }
 
-    // ViewHolder class to hold the views for each forum post item
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    // Static DiffCallback class
+    private static class DiffCallback extends DiffUtil.Callback {
 
-        TextView usernameText, titleText, descriptionText, timestampText, filePreviewText;
-        ImageView imageView;
+        private final List<ForumPost> oldList;
+        private final List<ForumPost> newList;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            // Initialize the views by finding them by ID
-            usernameText = itemView.findViewById(R.id.usernameText);
-            titleText = itemView.findViewById(R.id.titleText);
-            descriptionText = itemView.findViewById(R.id.descriptionText);
-            timestampText = itemView.findViewById(R.id.timestampText);
-            imageView = itemView.findViewById(R.id.imageView);
+        public DiffCallback(List<ForumPost> oldList, List<ForumPost> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            // Assuming timestamp uniquely identifies a post
+            return oldList.get(oldItemPosition).getTimestamp()
+                    .equals(newList.get(newItemPosition).getTimestamp());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            // Compare content of posts
+            return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
         }
     }
 }
