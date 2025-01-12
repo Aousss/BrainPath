@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,7 +34,9 @@ public class FriendListFragment extends Fragment {
     private FriendAdapter friendAdapter;
     private List<Friend> friendsList;
     private FirebaseFirestore db;
-    private ImageView profileImageURL;
+    private EditText searchFriendField;
+    private ImageButton searchButton;
+
 
 
     @Nullable
@@ -88,6 +91,21 @@ public class FriendListFragment extends Fragment {
         gotoForumButton.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
             navController.navigate(R.id.action_friendListFragment_to_forumFragment);
+        });
+
+        // Initialize Search Components
+        searchFriendField = view.findViewById(R.id.search_friend);
+        searchButton = view.findViewById(R.id.searchButton);
+
+        // Set up Search Button Click Listener
+        searchButton.setOnClickListener(v -> {
+            String query = searchFriendField.getText().toString().trim();
+            if (!query.isEmpty()) {
+                filterFriendsByUsername(query);
+            } else {
+                // Show the full list if the search field is empty
+                friendAdapter.updateFriendsList(friendsList);
+            }
         });
 
         return view;
@@ -192,6 +210,23 @@ public class FriendListFragment extends Fragment {
                     })
                     .addOnFailureListener(e -> Log.e("FriendListFragment", "Error fetching chat messages: " + e.getMessage()));
         }
+    }
+
+    private void filterFriendsByUsername(String query) {
+        List<Friend> filteredList = new ArrayList<>();
+
+        for (Friend friend : friendsList) {
+            if (friend.getUsername().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(friend);
+            }
+        }
+
+        if (filteredList.isEmpty()) {
+            Toast.makeText(requireContext(), "No friends found matching your search.", Toast.LENGTH_SHORT).show();
+        }
+
+        // Update the adapter with the filtered list
+        friendAdapter.updateFriendsList(filteredList);
     }
 
 
