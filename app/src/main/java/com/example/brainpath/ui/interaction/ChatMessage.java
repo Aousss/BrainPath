@@ -11,15 +11,17 @@ public class ChatMessage {
     private String senderId;
     private String message;
     private Timestamp timestamp;
+    private boolean isRead;
 
     // No-argument constructor required by Firestore
     public ChatMessage() {}
 
     // Constructor with parameters
-    public ChatMessage(String senderId, String message, Timestamp timestamp) {
+    public ChatMessage(String senderId, String message, Timestamp timestamp, boolean isRead) {
         this.senderId = senderId;
         this.message = message;
         this.timestamp = timestamp;
+        this.isRead = isRead;
     }
 
     // Getters
@@ -62,5 +64,9 @@ public class ChatMessage {
     public interface ChatMessagesCallback {
         void onMessagesFetched(List<ChatMessage> messages);
         void onError(String errorMessage);
+    }
+
+    public boolean isRead() {
+        return isRead;
     }
 }

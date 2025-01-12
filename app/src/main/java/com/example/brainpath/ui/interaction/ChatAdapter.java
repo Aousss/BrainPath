@@ -13,6 +13,7 @@ import com.example.brainpath.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -54,17 +55,19 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ChatMessage message = messages.get(position);
 
-        // Format the timestamp in Malaysia Time (MYT)
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
-        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Kuala_Lumpur")); // Set timezone to Malaysia
-        String timestamp = sdf.format(message.getTimestamp().toDate());
+        // Convert Firestore Timestamp to Date
+        Date timestamp = message.getTimestamp().toDate();
+
+        // Format the timestamp
+        String formattedTimestamp = DateTimeUtils.formatTimestamp(timestamp);
 
         if (holder instanceof SenderViewHolder) {
-            ((SenderViewHolder) holder).bind(message, timestamp);
+            ((SenderViewHolder) holder).bind(message, formattedTimestamp);
         } else if (holder instanceof ReceiverViewHolder) {
-            ((ReceiverViewHolder) holder).bind(message, timestamp);
+            ((ReceiverViewHolder) holder).bind(message, formattedTimestamp);
         }
     }
+
 
     @Override
     public int getItemCount() {
