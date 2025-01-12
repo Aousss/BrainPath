@@ -11,14 +11,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.brainpath.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.util.HashMap;
 
 public class ProgressCoursesListsFragment extends Fragment {
     // Firestore instance
@@ -37,14 +36,15 @@ public class ProgressCoursesListsFragment extends Fragment {
         // Initialize the course container
         courseContainer = rootView.findViewById(R.id.courseContainer);
 
-        // Fetch courses from Firestore
-        fetchCoursesFromFirebase();
+        // Update courses from Firestore
+        updateCoursesFromFirebase();
+
 
         return rootView;
     }
 
-    private void fetchCoursesFromFirebase() {
-        db.collection("course") // Replace "course" with your actual collection name in Firestore
+    private void updateCoursesFromFirebase() {
+        db.collection("course")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -52,69 +52,77 @@ public class ProgressCoursesListsFragment extends Fragment {
                             String title = document.getString("name");
                             int progress = document.getLong("completion").intValue();
 
-                            // Create course data
-                            HashMap<String, Object> course = createCourse(title, progress);
-
-                            // Dynamically add course card
-                            addCourseCard(courseContainer, course);
+                            // Match course titles and update their progress
+                            if ("Mathematics".equalsIgnoreCase(title)) {
+                                updateCourseProgress(R.id.firstProgessBar, R.id.firstPercentage, R.id.firstCourseTitle, progress, title);
+                            } else if ("Science".equalsIgnoreCase(title)) {
+                                updateCourseProgress(R.id.secondProgressBar, R.id.secondPercentage,R.id.secondTitle, progress, title);
+                            } else if ("English".equalsIgnoreCase(title)) {
+                                updateCourseProgress(R.id.thirdProgressBar, R.id.thirdPercentage,R.id.thirdTitle, progress, title);
+                            }
                         }
                     } else {
-                        // Log error
                         Log.e("FirestoreError", "Error fetching courses", task.getException());
                     }
                 });
     }
 
-    private HashMap<String, Object> createCourse(String title, int progress) {
-        HashMap<String, Object> course = new HashMap<>();
-        course.put("title", title);
-        course.put("progress", progress);
-        return course;
+    private void updateCourseProgress(int progressBarId, int percentageId, int nameId, int progress, String title) {
+        // Find and update the ProgressBar
+        ProgressBar progressBar = courseContainer.findViewById(progressBarId);
+        if (progressBar != null) {
+            progressBar.setProgress(progress);
+        }
+
+        // Update the course title
+        TextView name = courseContainer.findViewById(nameId);
+        if (name != null) {
+            name.setText(title);
+        }
+
+        // Update the percentage TextView
+        TextView percentage = courseContainer.findViewById(percentageId);
+        if (percentage != null) {
+            percentage.setText(progress + "%");
+        }
+
+        // Add click listener to navigate to another fragment
+        View courseCard = (View) courseContainer.findViewById(progressBarId).getParent(); // Assuming parent is the course card
+        if (courseCard != null) {
+            courseCard.setOnClickListener(v -> navigateToSubjectDetails(title, progress));
+        }
     }
 
-    private void addCourseCard(LinearLayout parent, HashMap<String, Object> course) {
-        // Inflate course_card layout
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View courseCard = inflater.inflate(R.layout.course_card, parent, false);
-        CardView cardView = courseCard.findViewById(R.id.cardView);
+    private void navigateToSubjectDetails(String subjectTitle, int progress) {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
 
-        // Set course title
-        TextView courseTitle = courseCard.findViewById(R.id.courseTitle);
-        courseTitle.setText((String) course.get("title"));
+        // Create a Bundle to pass data
+        Bundle bundle = new Bundle();
+        bundle.putString("subjectTitle", subjectTitle);
+        bundle.putInt("progress", progress);
 
-        // Set progress bar
-        ProgressBar progressBar = courseCard.findViewById(R.id.progressBar);
-        progressBar.setProgress((int) course.get("progress"));
-
-        // Set percentage
-        TextView percentage = courseCard.findViewById(R.id.percentage);
-        percentage.setText(course.get("progress") + "%");
-
-        // Retrieve course data
-        String name = (String) course.get("title");
-        int progress = (int) course.get("progress");
-
-        // Set click listener for navigation
-        cardView.setOnClickListener(v -> {
-            // Navigate to ProgressCoursesFragment with arguments
-            Bundle args = new Bundle();
-            args.putString("courseName", name);
-            args.putInt("courseProgress", progress);
-
-            ProgressCoursesFragment progressCoursesFragment = new ProgressCoursesFragment();
-            progressCoursesFragment.setArguments(args);
-
-            // Replace the fragment (use your FragmentManager)
-            if (getActivity() != null) {
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.container, progressCoursesFragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-
-        // Add card to parent
-        parent.addView(courseCard);
+        // Navigate to the target fragment with the Bundle
+        navController.navigate(R.id.action_navigation_course_lists_to_navigation_progress_course, bundle);
     }
+
+
+//    private void updateCourseProgress(int progressBarId, int percentageId, int nameId, int progress, String title) {
+//        // Find and update the ProgressBar
+//        ProgressBar progressBar = courseContainer.findViewById(progressBarId);
+//        if (progressBar != null) {
+//            progressBar.setProgress(progress);
+//        }
+//
+//        TextView name = courseContainer.findViewById(nameId);
+//        if (name != null) {
+//            name.setText(title);
+//        }
+//
+//        // Find and update the percentage TextView
+//        TextView percentage = courseContainer.findViewById(percentageId);
+//        if (percentage != null) {
+//            percentage.setText(progress + "%");
+//        }
+//    }
+
 }

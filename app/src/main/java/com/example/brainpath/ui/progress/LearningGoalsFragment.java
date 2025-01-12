@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +34,9 @@ public class LearningGoalsFragment extends Fragment {
     private RecyclerView subjectsRecyclerView;
     private SubjectAdapter subjectAdapter;
     private List<Subject> subjectsList;
+    private TextView currentGoals;
+    private TextView totalAchieved;
+    private TextView average;
 
     private BarChart barChart;
     private BarDataSet barDataSet;
@@ -52,12 +56,35 @@ public class LearningGoalsFragment extends Fragment {
         subjectAdapter = new SubjectAdapter(subjectsList);
         subjectsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         subjectsRecyclerView.setAdapter(subjectAdapter);
+        currentGoals=rootView.findViewById(R.id.goalHours);
+        totalAchieved=rootView.findViewById(R.id.achieved);
+        average=rootView.findViewById(R.id.average);
 
         fetchSubjectsFromFirebase();
         setupBarChart();
         fetchBarChartData();
+        updateText();
 
         return rootView;
+    }
+
+    private void updateText(){
+        String temp = currentGoals.getText().toString();
+        int goal = Integer.parseInt(temp);
+        int count=0;
+        float ave=0;
+        float total=0;
+        for(int i=0;i<7;i++){
+            total+=barLengths[i];
+        }
+        ave=total/7;
+        for(int i=0;i<7;i++){
+            if(barLengths[i]>=goal){
+                count++;
+            }
+        }
+        totalAchieved.setText(count+" Times");
+        average.setText(String.format("%.1f Hours", ave));
     }
 
     private void fetchSubjectsFromFirebase() {
