@@ -1,5 +1,6 @@
 package com.example.brainpath.ui.assessment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,16 @@ public class AssessmentFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_assessment_diagnostic, container, false);
 
+        view.findViewById(R.id.mathCard).setOnClickListener(v -> navigateToQuizList("MATH"));
+        view.findViewById(R.id.scienceCard).setOnClickListener(v -> navigateToQuizList("SCIENCE"));
+        view.findViewById(R.id.englishCard).setOnClickListener(v -> navigateToQuizList("ENGLISH"));
+
         return view;
+    }
+
+    private void navigateToQuizList(String subject) {
+        Intent intent = new Intent(getContext(), MainQuizActivity.class);
+        intent.putExtra("subject", subject);
+        startActivity(intent);
     }
 }
