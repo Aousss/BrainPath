@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -23,9 +24,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class FriendListFragment extends Fragment {
 
@@ -33,7 +37,9 @@ public class FriendListFragment extends Fragment {
     private FriendAdapter friendAdapter;
     private List<Friend> friendsList;
     private FirebaseFirestore db;
-    private ImageView profileImageURL;
+    private EditText searchFriendField;
+    private ImageButton searchButton;
+
 
 
     @Nullable
@@ -55,20 +61,17 @@ public class FriendListFragment extends Fragment {
             String friendId = friend.getUserId();
 
             // Create a chatId
-            String chatId = currentUserId.compareTo(friendId) < 0 ?
-                    currentUserId + "_" + friendId :
-                    friendId + "_" + currentUserId;
+            String chatId = currentUserId.compareTo(friendId) < 0 ? currentUserId + "_" + friendId : friendId + "_" + currentUserId;
 
-            // Log the chatId for debugging
-            Log.d("FriendListFragment", "Generated chatId: " + chatId);
-
-            // Pass the chatId to ChatFragment
+            // Pass the friend data and chatId to the ChatFragment
             Bundle bundle = new Bundle();
             bundle.putString("chatId", chatId);
+            bundle.putParcelable("friend", friend); // Pass the friend object
 
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
             navController.navigate(R.id.action_friendListFragment_to_chatFragment, bundle);
         });
+
 
         recyclerView.setAdapter(friendAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -88,6 +91,21 @@ public class FriendListFragment extends Fragment {
         gotoForumButton.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
             navController.navigate(R.id.action_friendListFragment_to_forumFragment);
+        });
+
+        // Initialize Search Components
+        searchFriendField = view.findViewById(R.id.search_friend);
+        searchButton = view.findViewById(R.id.searchButton);
+
+        // Set up Search Button Click Listener
+        searchButton.setOnClickListener(v -> {
+            String query = searchFriendField.getText().toString().trim();
+            if (!query.isEmpty()) {
+                filterFriendsByUsername(query);
+            } else {
+                // Show the full list if the search field is empty
+                friendAdapter.updateFriendsList(friendsList);
+            }
         });
 
         return view;
@@ -127,13 +145,8 @@ public class FriendListFragment extends Fragment {
 
         for (String friendId : friendIds) {
             String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            String chatId = currentUserId.compareTo(friendId) < 0 ? currentUserId + "_" + friendId : friendId + "_" + currentUserId;
 
-            // Create the chat ID
-            String chatId = currentUserId.compareTo(friendId) < 0 ?
-                    currentUserId + "_" + friendId :
-                    friendId + "_" + currentUserId;
-
-            // Fetch the latest message for this chat
             db.collection("chats")
                     .document(chatId)
                     .collection("messages")
@@ -142,47 +155,41 @@ public class FriendListFragment extends Fragment {
                     .get()
                     .addOnSuccessListener(querySnapshot -> {
                         String lastMessage;
-                        String lastSeen;
+                        Date lastMessageTimestamp = new Date(0); // Default to epoch time
 
                         if (!querySnapshot.isEmpty()) {
                             ChatMessage latestMessage = querySnapshot.getDocuments().get(0).toObject(ChatMessage.class);
-                            if (latestMessage != null) {
+                            if (latestMessage != null && latestMessage.getTimestamp() != null) {
                                 lastMessage = latestMessage.getMessage();
-
-                                if (latestMessage.getTimestamp() != null) {
-                                    Date timestampDate = latestMessage.getTimestamp().toDate();
-                                    lastSeen = DateTimeUtils.formatTimestamp(timestampDate); // Format the timestamp
-                                } else {
-                                    lastSeen = ""; // Fallback if the timestamp is null
-                                }
-
+                                lastMessageTimestamp = latestMessage.getTimestamp().toDate(); // Store the raw timestamp for sorting
                             } else {
-                                lastSeen = "";
                                 lastMessage = "No recent messages";
                             }
                         } else {
-                            lastSeen = "";
                             lastMessage = "No recent messages";
                         }
 
                         // Fetch friend's username and profile
+                        Date finalLastMessageTimestamp = lastMessageTimestamp;
                         db.collection("users")
                                 .document(friendId)
                                 .get()
                                 .addOnSuccessListener(friendDocument -> {
                                     if (friendDocument.exists()) {
                                         String username = friendDocument.getString("username");
-                                        String profile = friendDocument.getString("profileImageURL");
+                                        String profile = friendDocument.getString("profileImageUrl");
 
                                         Friend friend = new Friend(
                                                 username != null ? username : "Unknown Friend",
                                                 friendId,
                                                 profile != null ? profile : "",
                                                 lastMessage,
-                                                lastSeen
+                                                DateTimeUtils.formatTimestamp(finalLastMessageTimestamp),  // Display formatted timestamp
+                                                finalLastMessageTimestamp  // Store the raw timestamp for sorting
                                         );
 
                                         friendsList.add(friend);
+                                        sortFriendsListByLatestChat();  // Ensure the list is sorted after adding a new friend
                                         friendAdapter.notifyDataSetChanged();
                                     } else {
                                         Log.w("FriendListFragment", "Friend document does not exist for ID: " + friendId);
@@ -192,6 +199,35 @@ public class FriendListFragment extends Fragment {
                     })
                     .addOnFailureListener(e -> Log.e("FriendListFragment", "Error fetching chat messages: " + e.getMessage()));
         }
+    }
+
+    private void sortFriendsListByLatestChat() {
+        friendsList.sort((friend1, friend2) -> {
+            Date date1 = friend1.getLastMessageTimestamp();
+            Date date2 = friend2.getLastMessageTimestamp();
+
+            // Sort in descending order (latest message on top)
+            return date2.compareTo(date1);
+        });
+    }
+
+
+
+    private void filterFriendsByUsername(String query) {
+        List<Friend> filteredList = new ArrayList<>();
+
+        for (Friend friend : friendsList) {
+            if (friend.getUsername().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(friend);
+            }
+        }
+
+        if (filteredList.isEmpty()) {
+            Toast.makeText(requireContext(), "No friends found matching your search.", Toast.LENGTH_SHORT).show();
+        }
+
+        // Update the adapter with the filtered list
+        friendAdapter.updateFriendsList(filteredList);
     }
 
 

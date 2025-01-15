@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.brainpath.R;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +39,9 @@ public class ChatFragment extends Fragment {
     private ImageButton sendButton;
     private String chatId;
 
+    private ImageView profileImageView;
+    private TextView usernameTextView;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,10 +51,29 @@ public class ChatFragment extends Fragment {
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
 
+        // Get references to UI elements
+        profileImageView = view.findViewById(R.id.profilePic);
+        usernameTextView = view.findViewById(R.id.usernamePic);
+
         // Get the chatId from arguments
         Bundle args = getArguments();
+
         if (args != null) {
+            Friend friend = args.getParcelable("friend");
             chatId = args.getString("chatId");
+
+            if (friend != null) {
+                // Set the username
+                usernameTextView.setText(friend.getUsername());
+
+                // Load the profile image using Glide
+                Glide.with(requireContext())
+                        .load(friend.getProfile())
+                        .placeholder(R.drawable.ic_profile_placeholder) // Placeholder
+                        .error(R.drawable.ic_profile_placeholder) // Fallback image
+                        .circleCrop() // Crop to a circle
+                        .into(profileImageView);
+            }
         }
 
         // Log the received chatId for debugging purposes

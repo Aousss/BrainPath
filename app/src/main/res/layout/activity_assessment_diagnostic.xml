@@ -23,51 +23,362 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="60dp">
 
+            <!-- Registered Course Section -->
             <TextView
                 android:text="Registered Course"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textColor="@color/dark_grey"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
-            <!-- connect with >> assessment_course.xml-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/courseRegistered"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="20dp"/>
+                android:orientation="vertical"
+                android:layout_marginVertical="16dp">
 
+                <!-- Math Course -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/mathCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/mathImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/math_image" />
+
+                        <TextView
+                            android:id="@+id/mathTeacher"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:background="@drawable/rounded_teacher_label"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="4dp"
+                            android:text="Teacher: Zarina Ahmad"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true" />
+
+                        <TextView
+                            android:id="@+id/mathName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/mathImage"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginStart="16dp"
+                            android:text="MATH"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Science Course -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/scienceCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/scienceImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/science_image" />
+
+                        <TextView
+                            android:id="@+id/scienceTeacher"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:background="@drawable/rounded_teacher_label"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="4dp"
+                            android:text="Teacher: Zubaidah Mt Yusop"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true" />
+
+                        <TextView
+                            android:id="@+id/scienceName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/scienceImage"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginStart="16dp"
+                            android:text="SCIENCE"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- English Course -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/englishCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/englishImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/english_image" />
+
+                        <TextView
+                            android:id="@+id/englishTeacher"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:background="@drawable/rounded_teacher_label"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="4dp"
+                            android:text="Teacher: Zizan Razak"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true" />
+
+                        <TextView
+                            android:id="@+id/englishName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/englishImage"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginStart="16dp"
+                            android:text="ENGLISH"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <!-- Upcoming Assessment Section -->
             <TextView
                 android:text="Upcoming Assessment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textColor="@color/dark_grey"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
-            <!-- connect with >> assessment_upcoming.xml-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/upcomingAssessment"
+            <!-- Assessment 1 -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="20dp"/>
+                android:layout_marginVertical="10dp"
+                android:backgroundTint="@color/white"
+                app:cardCornerRadius="20dp">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/dayDate1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Friday, 3 January 2025"
+                        android:textColor="@color/dark_grey"
+                        android:textStyle="bold"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/time1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="10:00"
+                            android:textSize="16sp"
+                            android:textColor="@color/dark_grey" />
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:padding="5dp"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/lightgrey_rectangle_rounded_edge"
+                            android:src="@drawable/ic_assessment_coming" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp">
+
+                            <TextView
+                                android:id="@+id/assessmentTitle1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Assessment 3 Math"
+                                android:textSize="16sp"
+                                android:textColor="@color/blue"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/duration1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Duration: 2 hours"
+                                android:textSize="16sp"
+                                android:textColor="@color/dark_grey" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:text="Go to Assessment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:padding="8dp"
+                        android:background="@drawable/grey_rectangle_rounded_border" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="10dp"
+                android:background="@color/light_grey" />
+
+            <!-- Assessment 2 -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:backgroundTint="@color/white"
+                app:cardCornerRadius="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/dayDate2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Monday, 7 January 2025"
+                        android:textColor="@color/dark_grey"
+                        android:textStyle="bold"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/time2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="13:00"
+                            android:textSize="16sp"
+                            android:textColor="@color/dark_grey" />
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:padding="5dp"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/lightgrey_rectangle_rounded_edge"
+                            android:src="@drawable/ic_assessment_coming" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp">
+
+                            <TextView
+                                android:id="@+id/assessmentTitle2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Assessment 3 Science"
+                                android:textSize="16sp"
+                                android:textColor="@color/blue"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/duration2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Duration: 1 hour"
+                                android:textSize="16sp"
+                                android:textColor="@color/dark_grey" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:text="Go to Assessment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:padding="8dp"
+                        android:background="@drawable/grey_rectangle_rounded_border" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Calendar Section -->
             <TextView
                 android:text="Calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textColor="@color/dark_grey"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
                 app:cardCornerRadius="10dp"
-                android:background="@color/light_blue"
-                android:layout_gravity="center_horizontal">
+                android:background="@color/light_blue">
 
                 <CalendarView
                     android:layout_width="match_parent"
@@ -75,8 +386,8 @@
                     android:padding="10dp"
                     android:focusedMonthDateColor="@color/blue"
                     android:unfocusedMonthDateColor="@color/light_grey" />
-
             </androidx.cardview.widget.CardView>
+
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -174,7 +485,5 @@
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
-
     </ScrollView>
-
 </androidx.cardview.widget.CardView>

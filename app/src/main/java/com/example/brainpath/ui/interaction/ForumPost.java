@@ -1,21 +1,22 @@
 package com.example.brainpath.ui.interaction;
 
+import java.util.Objects;
+
 public class ForumPost {
     private String username;
     private String title;
     private String description;
     private String timestamp;
     private String imageUrl;
-    private String fileUrl;
     private String fileDocId;
 
-    // Default constructor (required for Firestore)
+    // Default constructor required for Firebase/Firestore serialization
     public ForumPost() {
-        // Empty constructor for Firestore
+        // Empty constructor
     }
 
     // Constructor
-    public ForumPost(String username, String title, String description, String timestamp, String imageUrl, String fileUrl) {
+    public ForumPost(String username, String title, String description, String timestamp, String imageUrl, String fileDocId) {
         this.username = username;
         this.title = title;
         this.description = description;
@@ -46,7 +47,7 @@ public class ForumPost {
     }
 
     public String getFileDocId() {
-        return fileDocId;  // Getter for fileDocId
+        return fileDocId;
     }
 
     // Setters
@@ -72,5 +73,27 @@ public class ForumPost {
 
     public void setFileDocId(String fileDocId) {
         this.fileDocId = fileDocId;
+    }
+
+    // Override equals method
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true; // Same object reference
+        if (obj == null || getClass() != obj.getClass()) return false; // Null or different class
+
+        ForumPost that = (ForumPost) obj;
+
+        return Objects.equals(username, that.username) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(timestamp, that.timestamp) &&
+                Objects.equals(imageUrl, that.imageUrl) &&
+                Objects.equals(fileDocId, that.fileDocId);
+    }
+
+    // Override hashCode method
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, title, description, timestamp, imageUrl, fileDocId);
     }
 }

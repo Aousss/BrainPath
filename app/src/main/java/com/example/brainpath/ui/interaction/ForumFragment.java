@@ -16,11 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.brainpath.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ForumFragment extends Fragment {
 
@@ -28,7 +32,6 @@ public class ForumFragment extends Fragment {
     private ForumPostAdapter forumPostAdapter;
     private List<ForumPost> forumPostList;
     private FirebaseFirestore firestore;
-
 
     @Nullable
     @Override
@@ -58,37 +61,61 @@ public class ForumFragment extends Fragment {
 
     private void loadForumPosts() {
         firestore.collection("forumPosts")
-                .orderBy("timestamp", Query.Direction.DESCENDING) // Order by timestamp (latest first)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .addSnapshotListener((queryDocumentSnapshots, exception) -> {
+                    if (exception != null) {
+                        Toast.makeText(requireContext(), "Error loading posts: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     if (queryDocumentSnapshots != null) {
                         List<ForumPost> posts = queryDocumentSnapshots.toObjects(ForumPost.class);
+                        List<String> fileDocIds = extractFileDocIds(posts);
 
-                        for (ForumPost post : posts) {
-                            String fileDocId = post.getFileDocId();  // This should now work
-
-                            if (fileDocId != null) {
-                                // Fetch the file URL using the fileDocId from the forumFiles collection
-                                firestore.collection("forumFiles")
-                                        .document(fileDocId)
-                                        .get()
-                                        .addOnSuccessListener(fileDocSnapshot -> {
-                                            String fileUrl = fileDocSnapshot.getString("fileUrl");
-                                            post.setImageUrl(fileUrl);  // Set the file URL (image URL) in the post object
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Toast.makeText(requireContext(), "Error fetching image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        });
-                            }
+                        if (!fileDocIds.isEmpty()) {
+                            fetchFileUrls(fileDocIds, posts);
+                        } else {
+                            forumPostAdapter.updateData(posts); // No files, just update posts
                         }
-
-                        forumPostList.clear();
-                        forumPostList.addAll(posts);
-                        forumPostAdapter.notifyDataSetChanged();
                     }
+                });
+    }
+
+    private List<String> extractFileDocIds(List<ForumPost> posts) {
+        List<String> fileDocIds = new ArrayList<>();
+        for (ForumPost post : posts) {
+            if (post.getFileDocId() != null) {
+                fileDocIds.add(post.getFileDocId());
+            }
+        }
+        return fileDocIds;
+    }
+
+    private void fetchFileUrls(List<String> fileDocIds, List<ForumPost> posts) {
+        firestore.collection("forumFiles")
+                .whereIn(FieldPath.documentId(), fileDocIds)
+                .get()
+                .addOnSuccessListener(fileQuerySnapshot -> {
+                    Map<String, String> fileUrls = new HashMap<>();
+                    for (DocumentSnapshot doc : fileQuerySnapshot.getDocuments()) {
+                        fileUrls.put(doc.getId(), doc.getString("fileUrl"));
+                    }
+
+                    // Associate file URLs with their respective posts
+                    for (ForumPost post : posts) {
+                        String fileUrl = fileUrls.get(post.getFileDocId());
+                        if (fileUrl != null) {
+                            post.setImageUrl(fileUrl);
+                        }
+                    }
+
+                    // Update the adapter with posts
+                    forumPostAdapter.updateData(posts);
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(requireContext(), "Error loading posts: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                .addOnFailureListener(exception -> {
+                    Toast.makeText(requireContext(), "Error fetching file URLs: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Update adapter without file URLs
+                    forumPostAdapter.updateData(posts);
                 });
     }
 }

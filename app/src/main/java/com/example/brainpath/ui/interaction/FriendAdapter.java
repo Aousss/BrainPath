@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.brainpath.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendViewHolder> {
@@ -72,4 +73,11 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     public interface OnItemClickListener {
         void onItemClick(Friend friend);
     }
+
+    public void updateFriendsList(List<Friend> newFriendsList) {
+        this.friendsList = new ArrayList<>(newFriendsList);  // Replace with the new list
+        notifyDataSetChanged();  // Notify the adapter to refresh the UI
+    }
+
+
 }

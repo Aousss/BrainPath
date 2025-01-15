@@ -5,12 +5,36 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_assessment">
 
-    <!--  ASSESSMENT NAVIGATION  -->
+    <!-- Assessment Fragment -->
     <fragment
         android:id="@+id/navigation_assessment"
         android:name="com.example.brainpath.ui.assessment.AssessmentFragment"
-        android:label="@string/title_assessment"
-        tools:layout="@layout/activity_assessment_diagnostic" />
+        android:label="Assessment Fragment"
+        tools:layout="@layout/activity_assessment_diagnostic">
+        <action
+            android:id="@+id/action_assessmentFragment_to_mainQuizFragment"
+            app:destination="@id/navigation_mainQuizFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_mainQuizFragment"
+        android:name="com.example.brainpath.ui.assessment.MainQuizFragment"
+        android:label="Main Quiz"
+        tools:layout="@layout/activity_main_quiz">
+        <action
+            android:id="@+id/action_mainQuizFragment_to_quizFragment"
+            app:destination="@id/navigation_quizFragment" />
+    </fragment>
+
+    <!-- Quiz Fragment -->
+    <fragment
+        android:id="@+id/navigation_quizFragment"
+        android:name="com.example.brainpath.ui.assessment.QuizFragment"
+        android:label="Quiz"
+        tools:layout="@layout/fragment_quiz" />
+    <argument
+        android:name="quiz"
+        app:argType="com.example.brainpath.ui.assessment.QuizModel" />
 
 
 
