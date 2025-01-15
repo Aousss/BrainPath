@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ui.assessment.MainQuizActivity"
-    >
+    tools:context=".ui.assessment.MainQuizFragment">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:src="@drawable/main_image" />
+        android:src="@drawable/main_image"
+        android:contentDescription="Main Image" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,47 +31,44 @@
             android:textSize="34sp"
             android:letterSpacing="0.1"
             android:textColor="@color/white"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lets play this awesome quiz app to enhance your knowledge"
+            android:text="Let's play this awesome quiz app to enhance your knowledge"
             android:gravity="center"
             android:textSize="18sp"
             android:layout_margin="16dp"
             android:textColor="@color/white"
-            android:textStyle="bold"/>
-
+            android:textStyle="bold" />
 
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="All items"
+        android:text="All Items"
         android:layout_marginTop="16dp"
         android:layout_marginStart="4dp"
         android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ProgressBar
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerInParent="true"
             android:visibility="gone"
-            android:id="@+id/progress_bar"/>
+            android:id="@+id/progress_bar" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="16dp"
-            android:id="@+id/recycler_view"/>
-
+            android:id="@+id/recycler_view" />
     </RelativeLayout>
-
-
 </LinearLayout>
