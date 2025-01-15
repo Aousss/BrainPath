@@ -41,6 +41,9 @@
         <activity android:name=".ui.profile.ForgotPassword" android:exported="true" />
         <activity android:name=".ui.profile.RegisterActivity" android:exported="true" />
 
+        <!-- QUIZ MODULE -->
+        <activity android:name=".ui.assessment.MainQuizActivity" />
+
         <!-- FIREBASE CONFIGURATION -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
