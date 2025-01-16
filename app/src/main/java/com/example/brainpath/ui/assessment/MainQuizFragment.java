@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -36,6 +37,7 @@ public class MainQuizFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             subject = getArguments().getString("subject");
+            Toast.makeText(getContext(),subject, Toast.LENGTH_SHORT).show();
         }
         quizList = new ArrayList<>();
     }
@@ -51,7 +53,7 @@ public class MainQuizFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        fetchQuizzesForSubject(subject);
         adapter = new QuizListAdapter(quizList, quiz -> {
             // Create a new Bundle to pass data to QuizFragment
             Bundle bundle = new Bundle();
@@ -68,7 +70,7 @@ public class MainQuizFragment extends Fragment {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(adapter);
 
-        fetchQuizzesForSubject(subject);
+
     }
 
     private void fetchQuizzesForSubject(String subject) {
@@ -81,7 +83,10 @@ public class MainQuizFragment extends Fragment {
                         quizList.clear();
                         for (DataSnapshot quizSnapshot : dataSnapshot.getChildren()) {
                             QuizModel quiz = quizSnapshot.getValue(QuizModel.class);
-                            quizList.add(quiz);
+                            if (quiz != null) {
+                                quiz.setId(quizSnapshot.getKey()); // Set the Firebase key as the ID
+                                quizList.add(quiz);
+                            }
                         }
                         adapter.notifyDataSetChanged();
                     }

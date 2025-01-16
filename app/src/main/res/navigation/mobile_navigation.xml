@@ -31,7 +31,11 @@
         android:id="@+id/navigation_quizFragment"
         android:name="com.example.brainpath.ui.assessment.QuizFragment"
         android:label="Quiz"
-        tools:layout="@layout/fragment_quiz" />
+        tools:layout="@layout/fragment_quiz" >
+        <action
+            android:id="@+id/action_navigation_quizFragment_to_navigation_assessment"
+            app:destination="@id/navigation_assessment" />
+    </fragment>
     <argument
         android:name="quiz"
         app:argType="com.example.brainpath.ui.assessment.QuizModel" />

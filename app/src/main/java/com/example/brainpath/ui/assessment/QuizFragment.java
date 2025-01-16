@@ -3,13 +3,16 @@ package com.example.brainpath.ui.assessment;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.brainpath.R;
 import com.example.brainpath.databinding.FragmentQuizBinding;
@@ -43,23 +46,21 @@ public class QuizFragment extends Fragment {
         if (getArguments() != null) {
             quizId = getArguments().getString("quizId");
             quizTitle = getArguments().getString("quizTitle");
+            Toast.makeText(getContext(),quizId+" & "+quizTitle, Toast.LENGTH_SHORT).show();
         }
 
-        // Ensure that quizId and quizTitle are not null
         if (quizId == null || quizTitle == null) {
-            // Handle the error or show a message
-            return binding.getRoot();  // You can also return an error view or exit
+            Toast.makeText(getContext(), "Quiz data is missing!", Toast.LENGTH_SHORT).show();
+            return binding.getRoot();
         }
 
-        // Set quiz title in UI
-        binding.quizTitleTextview.setText(quizTitle);  // Ensure the ID matches the one in your XML
+        binding.quizTitleTextview.setText(quizTitle);
 
         fetchQuestionsForQuiz();
         setupListeners();
 
         return binding.getRoot();
     }
-
 
     private void fetchQuestionsForQuiz() {
         FirebaseDatabase.getInstance().getReference("quizzes")
@@ -68,18 +69,25 @@ public class QuizFragment extends Fragment {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        questionList.clear();
                         for (DataSnapshot questionSnapshot : dataSnapshot.getChildren()) {
                             QuestionModel question = questionSnapshot.getValue(QuestionModel.class);
                             if (question != null) {
                                 questionList.add(question);
                             }
                         }
-                        loadQuestion();
+
+                        if (questionList.isEmpty()) {
+                            binding.questionTextview.setText("No questions available for this quiz.");
+                            binding.nextBtn.setVisibility(View.GONE);
+                        } else {
+                            loadQuestion();
+                        }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Handle Firebase error
+                        Toast.makeText(getContext(), "Failed to load quiz: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -92,21 +100,23 @@ public class QuizFragment extends Fragment {
 
         QuestionModel question = questionList.get(currentQuestionIndex);
 
-        // Set question text and options
         binding.questionTextview.setText(question.getQuestion());
         binding.questionIndicatorTextview.setText("Question " + (currentQuestionIndex + 1) + "/" + questionList.size());
-        binding.timerIndicatorTextview.setText("5:46");  // Set the timer or update as per your logic
+        binding.timerIndicatorTextview.setText("5:46");
 
         binding.btn0.setText(question.getOptions().get(0));
         binding.btn1.setText(question.getOptions().get(1));
         binding.btn2.setText(question.getOptions().get(2));
         binding.btn3.setText(question.getOptions().get(3));
+
+        resetButtonColors();
+        binding.nextBtn.setEnabled(false); // Disable next button until an answer is selected
     }
 
     private void setupListeners() {
         View.OnClickListener optionClickListener = v -> {
             String selectedAnswer = ((android.widget.Button) v).getText().toString();
-            checkAnswer(selectedAnswer);
+            checkAnswer(selectedAnswer, v);
         };
 
         binding.btn0.setOnClickListener(optionClickListener);
@@ -120,22 +130,34 @@ public class QuizFragment extends Fragment {
         });
     }
 
-    private void checkAnswer(String selectedAnswer) {
+    private void checkAnswer(String selectedAnswer, View selectedButton) {
         QuestionModel question = questionList.get(currentQuestionIndex);
         if (question.getCorrect().equals(selectedAnswer)) {
             score++;
+            selectedButton.setBackgroundColor(Color.GREEN);
+        } else {
+            selectedButton.setBackgroundColor(Color.RED);
         }
+
+        binding.nextBtn.setEnabled(true); // Enable next button after answer selection
+
+        new Handler().postDelayed(() -> resetButtonColors(), 1000);
+    }
+
+    private void resetButtonColors() {
+        binding.btn0.setBackgroundColor(Color.WHITE);
+        binding.btn1.setBackgroundColor(Color.WHITE);
+        binding.btn2.setBackgroundColor(Color.WHITE);
+        binding.btn3.setBackgroundColor(Color.WHITE);
     }
 
     private void finishQuiz() {
         int totalQuestions = questionList.size();
         int percentage = (int) (((float) score / totalQuestions) * 100);
 
-        // Inflate the custom score dialog layout
         LayoutInflater inflater = LayoutInflater.from(getContext());
         ScoreDialogBinding dialogBinding = ScoreDialogBinding.inflate(inflater);
 
-        // Set up the dialog UI
         dialogBinding.scoreProgressIndicator.setProgress(percentage);
         dialogBinding.scoreProgressText.setText(percentage + " %");
 
@@ -149,7 +171,6 @@ public class QuizFragment extends Fragment {
 
         dialogBinding.scoreSubtitle.setText(score + " out of " + totalQuestions + " are correct");
 
-        // Create and display the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(dialogBinding.getRoot());
 
@@ -158,7 +179,8 @@ public class QuizFragment extends Fragment {
 
         dialogBinding.finishBtn.setOnClickListener(v -> {
             dialog.dismiss();
-            requireActivity().onBackPressed();
+            Navigation.findNavController(binding.getRoot())
+                    .navigate(R.id.action_navigation_quizFragment_to_navigation_assessment);
         });
 
         dialog.show();
@@ -170,4 +192,3 @@ public class QuizFragment extends Fragment {
         binding = null;
     }
 }
-
