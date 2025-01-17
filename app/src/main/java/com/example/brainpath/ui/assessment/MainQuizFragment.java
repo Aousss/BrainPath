@@ -67,6 +67,7 @@ public class MainQuizFragment extends Fragment {
             // Create a new Bundle to pass data to QuizFragment
             Bundle bundle = new Bundle();
             bundle.putString("quizId", quiz.getId());  // Pass quizId
+            bundle.putString("quizSubject", quiz.getSubject());  // Pass quizId
             bundle.putString("quizTitle", quiz.getTitle());  // Pass quizTitle
             bundle.putString("quizTime", quiz.getTime()); // Pass time
 

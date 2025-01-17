@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,13 @@ public class AssessmentFragment extends Fragment {
         view.findViewById(R.id.mathCard).setOnClickListener(v -> navigateToQuizList("MATH"));
         view.findViewById(R.id.scienceCard).setOnClickListener(v -> navigateToQuizList("SCIENCE"));
         view.findViewById(R.id.englishCard).setOnClickListener(v -> navigateToQuizList("ENGLISH"));
+
+        // Add click listener for the ImageView
+        ImageView assessmentResult = view.findViewById(R.id.assessmentResult);
+        assessmentResult.setOnClickListener(v -> {
+            // Navigate to the ResultFragment
+            Navigation.findNavController(view).navigate(R.id.action_assessmentFragment_to_resultFragment);
+        });
 
         return view;
     }

@@ -9,11 +9,25 @@
     <fragment
         android:id="@+id/navigation_assessment"
         android:name="com.example.brainpath.ui.assessment.AssessmentFragment"
-        android:label="Assessment Fragment"
+        android:label="Assessment"
         tools:layout="@layout/activity_assessment_diagnostic">
         <action
             android:id="@+id/action_assessmentFragment_to_mainQuizFragment"
             app:destination="@id/navigation_mainQuizFragment" />
+
+        <action
+            android:id="@+id/action_assessmentFragment_to_resultFragment"
+            app:destination="@id/navigation_resultFragment" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_resultFragment"
+        android:name="com.example.brainpath.ui.assessment.ResultFragment"
+        android:label="Quiz Result"
+        tools:layout="@layout/fragment_result">
+
     </fragment>
 
     <fragment

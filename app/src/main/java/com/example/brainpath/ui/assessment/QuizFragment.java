@@ -20,8 +20,10 @@ import androidx.navigation.Navigation;
 import com.example.brainpath.R;
 import com.example.brainpath.databinding.FragmentQuizBinding;
 import com.example.brainpath.databinding.ScoreDialogBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -32,6 +34,8 @@ public class QuizFragment extends Fragment {
 
     private FragmentQuizBinding binding;
     private String quizId;
+    private String quizSubject;
+
     private String quizTitle;
     private String quizTime;
     private List<QuestionModel> questionList = new ArrayList<>();
@@ -49,10 +53,11 @@ public class QuizFragment extends Fragment {
         binding = FragmentQuizBinding.inflate(inflater, container, false);
 
         if (getArguments() != null) {
+            quizSubject = getArguments().getString("quizSubject");
             quizId = getArguments().getString("quizId");
             quizTitle = getArguments().getString("quizTitle");
             quizTime = getArguments().getString("quizTime");
-            Toast.makeText(getContext(), quizId + " & " + quizTitle + " & " + quizTime, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), quizSubject + " & " +quizId + " & " + quizTitle + " & " + quizTime, Toast.LENGTH_SHORT).show();
         }
 
         if (quizId == null || quizTitle == null) {
@@ -204,16 +209,21 @@ public class QuizFragment extends Fragment {
     private void finishQuiz() {
         int totalQuestions = questionList.size();
         int percentage = (int) (((float) score / totalQuestions) * 100);
+        String status = (percentage >= 60) ? "Passed" : "Failed";
+
+        // Get the current user's UID
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         ScoreDialogBinding dialogBinding = ScoreDialogBinding.inflate(inflater);
 
+        // Set progress and score details
         dialogBinding.scoreProgressIndicator.setProgress(percentage);
         dialogBinding.scoreProgressText.setText(percentage + " %");
 
         if (percentage >= 60) {
             dialogBinding.scoreTitle.setText("Congrats! You have passed");
-            dialogBinding.scoreTitle.setTextColor(ContextCompat.getColor(requireContext(),R.color.green));
+            dialogBinding.scoreTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
         } else {
             dialogBinding.scoreTitle.setText("Oops! You have failed");
             dialogBinding.scoreTitle.setTextColor(Color.RED);
@@ -221,12 +231,31 @@ public class QuizFragment extends Fragment {
 
         dialogBinding.scoreSubtitle.setText(score + " out of " + totalQuestions + " are correct");
 
+        // Prepare and upload the result to Firebase
+        QuizResult quizResult = new QuizResult(
+                quizSubject,
+                quizTitle,
+                score + "/" + totalQuestions,
+                status,
+                userId
+        );
+
+        // Upload result to Firebase
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://brightpath-d4c0c-ef61d.asia-southeast1.firebasedatabase.app/")
+                .getReference("quiz_results");
+        String resultId = databaseReference.child(userId).push().getKey(); // Save under the user's UID
+        if (resultId != null) {
+            databaseReference.child(userId).child(resultId).setValue(quizResult);
+        }
+
+        // Create and display the result dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(dialogBinding.getRoot());
 
         AlertDialog dialog = builder.create();
         dialog.setCancelable(false);
 
+        // Finish button logic
         dialogBinding.finishBtn.setOnClickListener(v -> {
             dialog.dismiss();
             Navigation.findNavController(binding.getRoot())
@@ -235,6 +264,8 @@ public class QuizFragment extends Fragment {
 
         dialog.show();
     }
+
+
 
     @Override
     public void onDestroyView() {
