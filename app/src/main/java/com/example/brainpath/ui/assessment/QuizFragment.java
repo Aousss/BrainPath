@@ -3,6 +3,7 @@ package com.example.brainpath.ui.assessment;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ public class QuizFragment extends Fragment {
     private List<QuestionModel> questionList = new ArrayList<>();
     private int currentQuestionIndex = 0;
     private int score = 0;
+    private CountDownTimer countDownTimer;
 
     public QuizFragment() {
         super(R.layout.fragment_quiz);
@@ -46,7 +48,7 @@ public class QuizFragment extends Fragment {
         if (getArguments() != null) {
             quizId = getArguments().getString("quizId");
             quizTitle = getArguments().getString("quizTitle");
-            Toast.makeText(getContext(),quizId+" & "+quizTitle, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), quizId + " & " + quizTitle, Toast.LENGTH_SHORT).show();
         }
 
         if (quizId == null || quizTitle == null) {
@@ -102,8 +104,6 @@ public class QuizFragment extends Fragment {
 
         binding.questionTextview.setText(question.getQuestion());
         binding.questionIndicatorTextview.setText("Question " + (currentQuestionIndex + 1) + "/" + questionList.size());
-        binding.timerIndicatorTextview.setText("5:46");
-
         binding.btn0.setText(question.getOptions().get(0));
         binding.btn1.setText(question.getOptions().get(1));
         binding.btn2.setText(question.getOptions().get(2));
@@ -111,6 +111,42 @@ public class QuizFragment extends Fragment {
 
         resetButtonColors();
         binding.nextBtn.setEnabled(false); // Disable next button until an answer is selected
+
+        // Cancel any previous timer
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        // Start a new timer for 30 seconds
+        countDownTimer = new CountDownTimer(5000, 1000) { // 30 seconds countdown
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long secondsRemaining = millisUntilFinished / 1000;
+                binding.timerIndicatorTextview.setText(secondsRemaining + " sec");
+            }
+
+            @Override
+            public void onFinish() {
+                showTimesUpDialog();
+            }
+        };
+
+        countDownTimer.start();
+    }
+
+    private void showTimesUpDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Time's Up!")
+                .setMessage("You ran out of time for this question.")
+                .setCancelable(false)
+
+                .setNegativeButton("End Quiz", (dialog, which) -> {
+                    dialog.dismiss();
+                    finishQuiz();
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void setupListeners() {
@@ -141,7 +177,7 @@ public class QuizFragment extends Fragment {
 
         binding.nextBtn.setEnabled(true); // Enable next button after answer selection
 
-        new Handler().postDelayed(() -> resetButtonColors(), 1000);
+        new Handler().postDelayed(this::resetButtonColors, 1000);
     }
 
     private void resetButtonColors() {
@@ -189,6 +225,9 @@ public class QuizFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
         binding = null;
     }
 }
