@@ -53,14 +53,22 @@ public class MainQuizFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Update the title dynamically
+        if (subject != null && !subject.isEmpty()) {
+            // Capitalize the first letter and make the rest lowercase
+            String formattedSubject = subject.substring(0, 1).toUpperCase() + subject.substring(1).toLowerCase();
+            binding.textViewTitle.setText(formattedSubject + " Quiz Center");
+        }
+
+
         fetchQuizzesForSubject(subject);
         adapter = new QuizListAdapter(quizList, quiz -> {
             // Create a new Bundle to pass data to QuizFragment
             Bundle bundle = new Bundle();
-
-            // Pass quizId and quizTitle to QuizFragment
             bundle.putString("quizId", quiz.getId());  // Pass quizId
             bundle.putString("quizTitle", quiz.getTitle());  // Pass quizTitle
+            bundle.putString("quizTime", quiz.getTime()); // Pass time
 
             // Navigate to QuizFragment with the bundle containing quizId and quizTitle
             Navigation.findNavController(view)
@@ -69,9 +77,8 @@ public class MainQuizFragment extends Fragment {
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(adapter);
-
-
     }
+
 
     private void fetchQuizzesForSubject(String subject) {
         FirebaseDatabase.getInstance().getReference("quizzes")

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -31,6 +32,7 @@ public class QuizFragment extends Fragment {
     private FragmentQuizBinding binding;
     private String quizId;
     private String quizTitle;
+    private String quizTime;
     private List<QuestionModel> questionList = new ArrayList<>();
     private int currentQuestionIndex = 0;
     private int score = 0;
@@ -48,7 +50,8 @@ public class QuizFragment extends Fragment {
         if (getArguments() != null) {
             quizId = getArguments().getString("quizId");
             quizTitle = getArguments().getString("quizTitle");
-            Toast.makeText(getContext(), quizId + " & " + quizTitle, Toast.LENGTH_SHORT).show();
+            quizTime = getArguments().getString("quizTime");
+            Toast.makeText(getContext(), quizId + " & " + quizTitle + " & " + quizTime, Toast.LENGTH_SHORT).show();
         }
 
         if (quizId == null || quizTitle == null) {
@@ -117,12 +120,14 @@ public class QuizFragment extends Fragment {
             countDownTimer.cancel();
         }
 
-        // Start a new timer for 30 seconds
-        countDownTimer = new CountDownTimer(5000, 1000) { // 30 seconds countdown
+        // Start a new timer with proper formatting for MM:SS
+        countDownTimer = new CountDownTimer(Long.parseLong(quizTime) * 60 * 1000, 1000) { // Convert minutes to milliseconds
             @Override
             public void onTick(long millisUntilFinished) {
-                long secondsRemaining = millisUntilFinished / 1000;
-                binding.timerIndicatorTextview.setText(secondsRemaining + " sec");
+                long minutesRemaining = (millisUntilFinished / 1000) / 60;
+                long secondsRemaining = (millisUntilFinished / 1000) % 60;
+                String timeFormatted = String.format("%02d:%02d", minutesRemaining, secondsRemaining);
+                binding.timerIndicatorTextview.setText(timeFormatted);
             }
 
             @Override
