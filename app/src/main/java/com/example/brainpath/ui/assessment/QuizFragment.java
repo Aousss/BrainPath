@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -107,6 +108,16 @@ public class QuizFragment extends Fragment {
 
         binding.questionTextview.setText(question.getQuestion());
         binding.questionIndicatorTextview.setText("Question " + (currentQuestionIndex + 1) + "/" + questionList.size());
+
+        // Set the maximum value for the progress indicator (once)
+        if (binding.questionProgressIndicator.getMax() != questionList.size()) {
+            binding.questionProgressIndicator.setMax(questionList.size());
+        }
+
+        // Update the progress value
+        binding.questionProgressIndicator.setProgress(currentQuestionIndex + 1);
+
+
         binding.btn0.setText(question.getOptions().get(0));
         binding.btn1.setText(question.getOptions().get(1));
         binding.btn2.setText(question.getOptions().get(2));
@@ -172,19 +183,17 @@ public class QuizFragment extends Fragment {
     }
 
     private void checkAnswer(String selectedAnswer, View selectedButton) {
+        // Reset all button colors to white
+        resetButtonColors();
         QuestionModel question = questionList.get(currentQuestionIndex);
+        // Highlight the selected button in blue
+        selectedButton.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.soft_blue_1));
+
         if (question.getCorrect().equals(selectedAnswer)) {
             score++;
-            selectedButton.setBackgroundColor(Color.GREEN);
-        } else {
-            selectedButton.setBackgroundColor(Color.RED);
         }
-
         binding.nextBtn.setEnabled(true); // Enable next button after answer selection
-
-        new Handler().postDelayed(this::resetButtonColors, 1000);
     }
-
     private void resetButtonColors() {
         binding.btn0.setBackgroundColor(Color.WHITE);
         binding.btn1.setBackgroundColor(Color.WHITE);
@@ -202,9 +211,9 @@ public class QuizFragment extends Fragment {
         dialogBinding.scoreProgressIndicator.setProgress(percentage);
         dialogBinding.scoreProgressText.setText(percentage + " %");
 
-        if (percentage > 60) {
+        if (percentage >= 60) {
             dialogBinding.scoreTitle.setText("Congrats! You have passed");
-            dialogBinding.scoreTitle.setTextColor(Color.BLUE);
+            dialogBinding.scoreTitle.setTextColor(ContextCompat.getColor(requireContext(),R.color.green));
         } else {
             dialogBinding.scoreTitle.setText("Oops! You have failed");
             dialogBinding.scoreTitle.setTextColor(Color.RED);

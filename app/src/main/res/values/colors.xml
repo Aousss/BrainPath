@@ -14,6 +14,12 @@
     <color name="light_grey">#999B9A</color>
     <color name="light_blue">#CEF7FE</color>
     <color name="blue">#29A0F0</color>
+    <color name="soft_blue">#6AB8F6</color>
+    <color name="soft_blue_1">#85C1F9</color>
+    <color name="soft_blue_2">#5CAAF2</color>
+    <color name="soft_blue_3">#4F9EEA</color>
+    <color name="soft_blue_4">#7DC7FF</color>
+
     <color name="light_white">#F7F7F7</color>
     <color name="red">#ff0000</color>
     <color name="green">#008000</color>
